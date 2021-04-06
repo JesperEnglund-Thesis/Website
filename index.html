@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+  <meta name="Jesper Englund" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Mulish' rel='stylesheet'>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="main-font">
+  <!-- Navbar -->
+  <nav class="w3-sidebar w3-bar-block w3-collapse w3-top sidebar" style="z-index:3;width:250px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <h3 class="w3-wide header2" style="color: #DDE2FF"><b>CT Dashboard</b></h3>
+    </div>
+    <div class="w3-padding-64 w3-large w3-text-grey">
+      <a href="#" class="w3-bar-item w3-button">Overview</a>
+      <a href="#" class="w3-bar-item w3-button">Vehicles</a>
+      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
+        Test <i class="fa fa-caret-down"></i>
+      </a>
+      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+        <a href="#" class="w3-bar-item w3-button">test1</a>
+        <a href="#" class="w3-bar-item w3-button">test2</a>
+      </div>
+      <a href="#" class="w3-bar-item w3-button">Contacts</a>
+      <a href="#" class="w3-bar-item w3-button">Articles</a>
+      <a href="#" class="w3-bar-item w3-button">Analytics</a>
+    </div>
+  </nav>
+
+  <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+  <!-- Top menu on small screens -->
+  <header class="w3-bar w3-top w3-hide-large sidebar w3-xlarge">
+    <div class="w3-bar-item w3-padding-24 w3-wide">CT Dashboard</div>
+    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+  </header>
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+  <!-- Page content -->
+  <div class="w3-content w3-main" style="max-width:2000px;margin-left:250px">
+
+    <div class="w3-hide-large" style="margin-top:83px"></div>
+
+    <!-- Home Section -->
+    <div class="w3-container w3-center">
+    </div>
+
+    <!-- The Overview Section -->
+    <div class="w3-container w3-center l12" style="width:100% !important; padding:0px" id="overview">
+      <h2 class="w3-wide header">COMMANDS</h2>
+      <div class="w3-row" style="margin:0px !important">
+        <button class="w3-quarter w3-button clickable-container w3-padding-32"
+          onclick="write_rec_action('CARRY ON')">
+          <p style="font-size:20px">Carry on</p>
+        </button>
+        <button class="w3-quarter w3-button clickable-container w3-padding-32"
+          onclick="write_rec_action('WAIT FOR MECHANIC')">
+          <p style="font-size:20px">Wait for mechanic</p>
+        </button>
+        <button class="w3-quarter w3-button clickable-container w3-padding-32"
+          onclick="write_rec_action('GO TO SERVICE CENTER')">
+          <p style="font-size:20px">Go to service center</p>
+        </button>
+        <button class="w3-quarter w3-button clickable-container w3-padding-32"
+          onclick="write_rec_action('GO TO SERVICE CENTER AFTER ROUTE')">
+          <p style="font-size:20px">Service center after route</p>
+        </button>
+      </div>
+    </div>
+    <div id="recActionDisp" class="w3-container">
+
+    </div>
+
+    <!-- First Modal -->
+    <div id="firstModal" class="w3-modal w3-left-align">
+      <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container palette-1-dark w3-center w3-padding-32">
+          <span onclick="document.getElementById('firstModal').style.display='none'"
+            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
+          <h2 class="w3-wide">First Modal</h2>
+          <p class="w3-center"><i>Something</i></p>
+        </header>
+        <div class="w3-container palette-2-dark side-padding-64">
+          <p>Hej!</p>
+        </div>
+        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="ffirst"></button>
+        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bfirst"></button>
+      </div>
+    </div>
+
+    <!-- Second Modal -->
+    <div id="secondModal" class="w3-modal w3-left-align">
+      <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container palette-1-dark w3-center w3-padding-32">
+          <span onclick="document.getElementById('secondModal').style.display='none'"
+            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
+          <h2 class="w3-wide">Second Modal</h2>
+          <p class="w3-center"><i>Something</i></p>
+        </header>
+        <div class="w3-container palette-2-dark side-padding-32">
+          <p>Hej!</p>
+        </div>
+        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="fsecond"></button>
+        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bsecond"></button>
+      </div>
+    </div>
+
+    <!-- Third Modal -->
+    <div id="thirdModal" class="w3-modal w3-left-align">
+      <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container palette-1-dark w3-center w3-padding-32">
+          <span onclick="document.getElementById('thirdModal').style.display='none'"
+            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
+          <h2 class="w3-wide">Third modal</h2>
+          <p class="w3-center"><i>Something</i></p>
+        </header>
+        <div class="w3-container palette-2-dark side-padding-32">
+          <p>Hejhej!</p>
+        </div>
+        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="fthird"></button>
+        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bthird"></button>
+      </div>
+    </div>
+
+    <!-- Fourth Modal -->
+    <div id="fourthModal" class="w3-modal w3-left-align">
+      <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container palette-1-dark w3-center w3-padding-32">
+          <span onclick="document.getElementById('fourthModal').style.display='none'"
+            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
+          <h2 class="w3-wide">Fourth Modal</h2>
+          <p class="w3-center"><i>Something</i></p>
+        </header>
+        <div class="w3-container palette-2-dark side-padding-32">
+          <p>Hallå!</p>
+        </div>
+        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="ffourth"></button>
+        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bfourth"></button>
+      </div>
+    </div>
+  <!-- End Page Content -->
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
