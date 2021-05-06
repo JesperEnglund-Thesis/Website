@@ -42,3 +42,8 @@
   background-color: #21233A;
   color: #A4A6B3
 }
+
+#map {
+  height: 60vh;
+  width: 80vw;
+}

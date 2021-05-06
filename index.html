@@ -12,11 +12,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href='https://fonts.googleapis.com/css?family=Mulish' rel='stylesheet'>
   <link rel="stylesheet" href="css/style.css">
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
 </head>
 
 <body class="main-font">
   <!-- Navbar -->
-  <nav class="w3-sidebar w3-bar-block w3-collapse w3-top sidebar" style="z-index:3;width:250px" id="mySidebar">
+  <nav class="w3-sidebar w3-bar-block w3-collapse w3-top sidebar" style="z-index:3;width:15vw" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
       <h3 class="w3-wide header2" style="color: #DDE2FF"><b>CT Dashboard</b></h3>
     </div>
@@ -47,7 +48,7 @@
   <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
   <!-- Page content -->
-  <div class="w3-content w3-main" style="max-width:2000px;margin-left:250px">
+  <div class="w3-content w3-main" style="max-width:2000px;margin-left:15vw">
 
     <div class="w3-hide-large" style="margin-top:83px"></div>
 
@@ -80,6 +81,8 @@
     <div id="recActionDisp" class="w3-container">
 
     </div>
+
+    <div id="map" class="w3-container"></div>
 
     <!-- First Modal -->
     <div id="firstModal" class="w3-modal w3-left-align">
@@ -149,10 +152,13 @@
       </div>
     </div>
   <!-- End Page Content -->
+
+  <img src="images/TruckIcon.png" id="truck1" style="width:4vw">
+  <script src="bundle.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
   <script src="firebase.js"></script>
-  <script src="js/script.js"></script>
+  <!--<script src="main.js"></script>-->
 </body>
 
 </html>

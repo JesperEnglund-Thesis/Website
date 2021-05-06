@@ -23,6 +23,28 @@ var ct_data = {
   ct_ver: false
 }
 
+var vehicle1 = {
+  symptoms: {
+
+  },
+  vehicleInfo: {
+    vehicleHealth: {
+      gsh: 0
+    },
+    generalInfo: {
+      model: "Model",
+      registration: "reg"
+    },
+    vehicleInfoCurrent: {
+      distance: 0,
+      distanceDriven: 0,
+      route: ["Orig", "Dest"],
+      speed: 0,
+      totalDowntimeApprox: 0
+    }
+  }
+}
+
 //Read db data
 var db = firebase.firestore();
 
@@ -30,6 +52,15 @@ db.collection("Vehicle").doc("CT_data")
     .onSnapshot(function(doc) {
         setCTdata(doc.data());
 });
+
+db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleInfoCurrent")
+    .onSnapshot(function(doc) {
+        setVehicle1CurrentData(doc.data());
+});
+
+function setVehicle1CurrentData(fbData){
+
+}
 
 function setCTdata(fbData){
   ct_data.rec_action = fbData.action_rec;
