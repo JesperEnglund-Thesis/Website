@@ -380,7 +380,6 @@ map.on('load', function () {
       'source': 'points',
       'layout': {
           'icon-image': 'custom-marker',
-          'icon-size': 0.1,
           // get the title name from the source's "title" property
           'text-field': ['get', 'title'],
           'text-font': [
