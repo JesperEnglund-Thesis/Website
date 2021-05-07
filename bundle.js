@@ -542,7 +542,8 @@ map.on('load', function () {
                 'coordinates': [18.01134, 59.34909]
               },
               'properties': {
-              'title': 'WS Stockholm'
+              'title': 'Stockholm Service Center',
+              'description':'<p><img src="images/wsdesc.png" style="width:100%"/></p>'
             }
           },
           {
@@ -579,6 +580,7 @@ map.on('load', function () {
 
 map.on('click', 'workshops', function (e) {
   var coordinates = e.features[0].geometry.coordinates.slice();
+  var title = e.features[0].properties.title;
   var description = e.features[0].properties.description;
 
   // Ensure that if the map is zoomed out such that multiple
