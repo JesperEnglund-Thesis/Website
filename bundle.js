@@ -529,7 +529,7 @@ map.on('load', function () {
       if (error) throw error;
       map.addImage('custom-marker', image);
       // Add a GeoJSON source with 2 points
-      map.addSource('points', {
+      map.addSource('workshops', {
         'type': 'geojson',
         'data': {
           'type': 'FeatureCollection',
@@ -562,12 +562,12 @@ map.on('load', function () {
 
     // Add a symbol layer
       map.addLayer({
-      'id': 'points',
+      'id': 'workshops',
       'type': 'symbol',
-      'source': 'points',
+      'source': 'workshops',
       'layout': {
           'icon-image': 'custom-marker',
-          'icon-size': 0.8,
+          'icon-size': 0.7,
           // get the title name from the source's "title" property
           'text-field': ['get', 'title'],
           'text-font': [
@@ -580,6 +580,16 @@ map.on('load', function () {
       });
     }
   );
+});
+
+// Change the cursor to a pointer when the mouse is over the places layer.
+map.on('mouseenter', 'workshops', function () {
+  map.getCanvas().style.cursor = 'pointer';
+});
+
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'workshops', function () {
+  map.getCanvas().style.cursor = '';
 });
 
 /*
