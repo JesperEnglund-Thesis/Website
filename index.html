@@ -13,27 +13,29 @@
   <link href='https://fonts.googleapis.com/css?family=Mulish' rel='stylesheet'>
   <link rel="stylesheet" href="css/style.css">
   <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+  <link rel="stylesheet" href="https://use.typekit.net/ufq8fqz.css">
 </head>
 
 <body class="main-font">
   <!-- Navbar -->
-  <nav class="w3-sidebar w3-bar-block w3-collapse w3-top sidebar" style="z-index:3;width:15vw" id="mySidebar">
+  <nav class="w3-sidebar w3-bar-block w3-collapse w3-top sidebar" style="z-index:3;width:240px" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
-      <h3 class="w3-wide header2" style="color: #DDE2FF"><b>CT Dashboard</b></h3>
+      <h3 class="w3-wide header2" style="color: #DDE2FF"><img src="images/ScaniaLogo.png" class="scanialogo"/><b>CT Dashboard</b></h3>
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey">
-      <a href="#" class="w3-bar-item w3-button">Overview</a>
-      <a href="#" class="w3-bar-item w3-button">Vehicles</a>
+      <a onclick="showContent(1)" class="w3-bar-item w3-button"><img src="images/truckWhite.png" alt="whiteTruck" class="navicon-truck"/>Vehicles</a>
+      <!--
       <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
         Test <i class="fa fa-caret-down"></i>
       </a>
       <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
         <a href="#" class="w3-bar-item w3-button">test1</a>
         <a href="#" class="w3-bar-item w3-button">test2</a>
-      </div>
-      <a href="#" class="w3-bar-item w3-button">Contacts</a>
-      <a href="#" class="w3-bar-item w3-button">Articles</a>
-      <a href="#" class="w3-bar-item w3-button">Analytics</a>
+      </div>-->
+      <a onclick="showContent(2)" class="w3-bar-item w3-button"><img src="images/Contacts.png" class="navicon"/>Contacts</a>
+      <a onclick="showContent(3)" class="w3-bar-item w3-button"><img src="images/KB.png" class="navicon"/>Knowledge Base</a>
+      <a onclick="showContent(4)" class="w3-bar-item w3-button"><img src="images/stats.png" class="navicon"/>Analytics</a>
+      <a onclick="showContent(5)" class="w3-bar-item w3-button"><img src="images/cog.png" class="navicon"/>Settings</a>
     </div>
   </nav>
 
@@ -52,12 +54,107 @@
 
     <div class="w3-hide-large" style="margin-top:83px"></div>
 
-    <!-- Home Section -->
-    <div class="w3-container w3-center">
-    </div>
-
-    <!-- The Overview Section -->
-    <div class="w3-container w3-center l12" style="width:100% !important; padding:0px" id="overview">
+    <!-- The Specific Vehicle Section -->
+    <div id="vehicleDetails" class="w3-container w3-center l12 mySection mybg" style="width:100% !important; padding:0px; display:none">
+      <img src="images/VDheader.png" style="width:100%"/>
+      <div class="dashcomp">
+        <div class="w3-row">
+          <div class="w3-col s6 m2">
+            <div class="gauges small-gauge center">
+              <img src="images/coolantGauge.png" style="width:100%"/>
+              <div id="coolVal" class="spec-gauge">
+                60
+              </div>
+            </div>
+            <div class="w3-display-container gauges small-gauge center">
+              <img src="images/oilPresGauge.png" style="width:100%"/>
+              <div id="oilPresVal" class="w3-display-middle">
+                0
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s12 m4">
+            <div class="w3-display-container gauges big-gauge center">
+              <img src="images/rpmGauge.png" style="width:100%"/>
+              <div id="rpmVal" class="gauges w3-display-middle">
+                1.5
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s12 m4">
+            <div class="w3-display-container gauges big-gauge center">
+              <img src="images/vMeter.png" style="width:100%"/>
+              <div id="vVal" class="gauges w3-display-middle">
+                30
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s6 m2">
+            <div class="gauges small-gauge center">
+              <img src="images/fuelGauge.png" style="width:100%"/>
+              <div id="fuelVal" class="spec-gauge">
+                80%
+              </div>
+            </div>
+            <div class="w3-display-container gauges small-gauge center">
+              <img src="images/airPresGauge.png" style="width:100%"/>
+              <div id="apVal" class="w3-display-middle">
+                8
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-col s6 m2">
+            <div class="w3-display-container gauges small-gauge center">
+              <img src="images/oilTempGauge.png" style="width:100%"/>
+              <div id="oilTempVal" class="w3-display-middle">
+                60
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s6 m2">
+            <div class="w3-display-container gauges xs-gauge center">
+              <img src="images/manifoldGauge.png" style="width:100%"/>
+              <div id="manifoldVal" class="w3-display-middle">
+                2.5
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s6 m2">
+            <div class="w3-display-container gauges xs-gauge center">
+              <img src="images/transGauge.png" style="width:100%"/>
+              <div id="transVal" class="w3-display-middle">
+                180
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s6 m2">
+            <div class="w3-display-container gauges xs-gauge center">
+              <img src="images/exhaustGauge.png" style="width:100%"/>
+              <div id="exhaustVal" class="w3-display-middle">
+                1.5
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s6 m2">
+            <div class="w3-display-container gauges xs-gauge center">
+              <img src="images/airAPresGauge.png" style="width:100%"/>
+              <div id="apAVal"class="w3-display-middle">
+                6
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s6 m2">
+            <div class="w3-display-container gauges small-gauge center">
+              <img src="images/airPres2Gauge.png" style="width:100%"/>
+              <div id="apSecondVal" class="w3-display-middle">
+                4
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <h2 class="w3-wide header">COMMANDS</h2>
       <div class="w3-row" style="margin:0px !important">
         <button class="w3-quarter w3-button clickable-container w3-padding-32"
@@ -77,12 +174,31 @@
           <p style="font-size:20px">Service center after route</p>
         </button>
       </div>
-    </div>
-    <div id="recActionDisp" class="w3-container">
+      <div id="recActionDisp" class="w3-container">
 
+      </div>
     </div>
 
-    <div id="map" class="w3-container"></div>
+    <!-- Vehicles Section -->
+    <div class="w3-container w3-center mySection">
+      <div id="map" class="w3-container"></div>
+    </div>
+
+    <!-- The Contacts Section -->
+    <div class="w3-container w3-center mySection" style="display:none">
+    </div>
+
+    <!-- The Articles Section -->
+    <div class="w3-container w3-center mySection" style="display:none">
+    </div>
+
+    <!-- The Analytics Section -->
+    <div class="w3-container w3-center mySection" style="display:none">
+    </div>
+
+    <!-- The Settings Section -->
+    <div class="w3-container w3-center mySection" style="display:none">
+    </div>
 
     <!-- First Modal -->
     <div id="firstModal" class="w3-modal w3-left-align">
@@ -153,12 +269,12 @@
     </div>
   <!-- End Page Content -->
 
-  <img src="images/TruckIcon.png" id="truck1" style="width:4vw">
+  <!--<img src="images/TruckIcon.png" id="truck1" style="width:4vw">-->
+  <script src="js/script.js"></script>
   <script src="bundle.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
   <script src="firebase.js"></script>
-  <!--<script src="main.js"></script>-->
 </body>
 
 </html>

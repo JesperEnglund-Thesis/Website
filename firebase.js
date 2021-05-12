@@ -59,7 +59,18 @@ db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("veh
 });
 
 function setVehicle1CurrentData(fbData){
+  trucks[0].speed = fbData.speed;
+  trucks[0].origText = fbData.route[0];
+  trucks[0].destText = fbData.route[1];
+}
 
+db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleHealth")
+    .onSnapshot(function(doc) {
+        setVehicle1HealthData(doc.data());
+});
+
+function setVehicle1HealthData(fbData){
+  trucks[0].gsh = fbData.gsh;
 }
 
 function setCTdata(fbData){
