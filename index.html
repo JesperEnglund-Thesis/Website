@@ -55,10 +55,52 @@
     <div class="w3-hide-large" style="margin-top:83px"></div>
 
     <!-- The Specific Vehicle Section -->
-    <div id="vehicleDetails" class="w3-container w3-center l12 mySection mybg" style="width:100% !important; padding:0px; display:none">
-      <img src="images/VDheader.png" style="width:100%"/>
+    <div id="vehicleDetails" class="w3-container w3-center l12 mySection" style="width:100% !important; padding:0px; display:none">
+      <img src="images/VDheader.png" style="width:100%;margin-bottom:25px"/>
       <div class="dashcomp">
         <div class="w3-row">
+          <div class="w3-col s12 m6 l4" style="padding:2px">
+            <div class="symptomsDisp" onclick="dispInfoModal(0)" id="infoComp">
+            </div>
+          </div>
+          <div class="w3-col s12 m6 l4" style="padding:2px">
+            <div class="symptomsDisp" onclick="dispSympModal(0)">
+              <div class="w3-row">
+                <div class="w3-col s6 m4 center">
+                  <div class="alert" id="heatWheels">
+                  </div>
+                </div>
+                <div class="w3-col s6 m4 center">
+                  <div class="alert" id="vibrationWheels">
+                  </div>
+                </div>
+                <div class="w3-col s6 m4 center">
+                  <div class="alert" id="airPress">
+                  </div>
+                </div>
+              </div>
+              <div class="w3-row">
+                <div class="w3-col s6 m4 center">
+                  <div class="alert" id="oilPress">
+                  </div>
+                </div>
+                <div class="w3-col s6 m4 center">
+                  <div class="alert" id="coolantTemp">
+                  </div>
+                </div>
+                <div class="w3-col s6 m4 center">
+                  <div class="alert" id="p-brake-engage">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w3-col s12 m6 l4" style="padding:2px">
+            <div class="symptomsDisp" onclick="dispInfoModal(0)" id="diagnosis">
+            </div>
+          </div>
+        </div>
+        <div class="w3-row" style="margin-top:10px">
           <div class="w3-col s6 m2">
             <div class="gauges small-gauge center">
               <img src="images/coolantGauge.png" style="width:100%"/>
@@ -83,9 +125,13 @@
           </div>
           <div class="w3-col s12 m4">
             <div class="w3-display-container gauges big-gauge center">
-              <img src="images/vMeter.png" style="width:100%"/>
+              <img src="images/vMeter2.png" style="width:100%"/>
               <div id="vVal" class="gauges w3-display-middle">
                 30
+              </div>
+              <div class="w3-display-middle" id="mySpeedNobe">
+                <div class="envelope">
+                </div>
               </div>
             </div>
           </div>
@@ -155,6 +201,28 @@
           </div>
         </div>
       </div>
+
+      <div class="w3-row">
+        <div class="w3-col s12 m6 w3-padding-32" style="padding-left:32px;">
+          <div class="component vehicle-comp" id="vLog">
+          </div>
+        </div>
+        <div class="w3-col s12 m6 w3-padding-32" style="padding-left:32px;padding-right:32px">
+          <div class="component vehicle-comp" id="comments"></div>
+        </div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-col s12 m6 w3-padding-32" style="padding-left:32px;">
+          <div class="component vehicle-comp" id="tests"><p class="header3">Tests</p>
+          </div>
+        </div>
+        <div class="w3-col s12 m6 w3-padding-32" style="padding-left:32px;padding-right:32px">
+          <div class="component vehicle-comp" id="actions"><p class="header3">Actions</p>
+            
+          </div>
+        </div>
+      </div>
+      <!--
       <h2 class="w3-wide header">COMMANDS</h2>
       <div class="w3-row" style="margin:0px !important">
         <button class="w3-quarter w3-button clickable-container w3-padding-32"
@@ -177,43 +245,79 @@
       <div id="recActionDisp" class="w3-container">
 
       </div>
+      -->
     </div>
 
     <!-- Vehicles Section -->
-    <div class="w3-container w3-center mySection">
-      <div id="map" class="w3-container"></div>
+    <div class="w3-container w3-center mySection" id="vehicles">
+      <img src="images/OVheader.png" style="width:100%"/>
+      <div class="vhcl-agg w3-row">
+        <div class="w3-quarter" style="padding-left:15px;padding-right:15px">
+          <a href='#vehicles-up' id='vehicles-up' class='component-btn center'>
+            <span class="comp-header">Up</span><br>
+            <span class="comp-value" id="vhcls-up-val"></span>
+          </a>
+        </div>
+        <div class="w3-quarter" style="padding-left:15px;padding-right:15px">
+          <a href='#vehicles-down' id='vehicles-down' class='component-btn center'>
+            <span class="comp-header">Down</span><br>
+            <span class="comp-value" id="vhcls-down-val"></span>
+          </a>
+        </div>
+        <div class="w3-quarter" style="padding-left:15px;padding-right:15px">
+          <a href='#vehicles-alerted' id='vehicles-alerted' class='component-btn center'>
+            <span class="comp-header">Alerted</span><br>
+            <span class="comp-value" id="vhcls-alerted-val"></span>
+          </a>
+        </div>
+        <div class="w3-quarter" style="padding-left:15px;padding-right:15px">
+          <a href='#vehicles-onhold' id='vehicles-onhold' class='component-btn center'>
+            <span class="comp-header">On Hold</span><br>
+            <span class="comp-value" id="vhcls-onhold-val"></span>
+          </a>
+        </div>
+      </div>
+      <div id="map" class="w3-container map"></div>
     </div>
 
     <!-- The Contacts Section -->
-    <div class="w3-container w3-center mySection" style="display:none">
+    <div class="w3-container w3-center mySection" id="contacts" style="display:none">
+      <img src="images/contacts1.png" style="width:100%"/>
+      <img src="images/contacts2.png" style="width:100%"/>
     </div>
 
     <!-- The Articles Section -->
-    <div class="w3-container w3-center mySection" style="display:none">
+    <div class="w3-container w3-center mySection" id="knowledgeBase" style="display:none;height:100vh">
+      <img src="images/kbPage.png" style="width:100%"/>
     </div>
 
     <!-- The Analytics Section -->
-    <div class="w3-container w3-center mySection" style="display:none">
+    <div class="w3-container w3-center mySection" id="analytics" style="display:none">
+      <img src="images/analytics1.png" style="width:100%"/>
+      <img src="images/analytics2.png" style="width:100%"/>
     </div>
 
     <!-- The Settings Section -->
-    <div class="w3-container w3-center mySection" style="display:none">
+    <div class="w3-container w3-center mySection" id="settings" style="display:none">
+      <img src="images/settings.png" style="width:100%"/>
     </div>
 
-    <!-- First Modal -->
+    <!-- Symptoms Data Modal -->
     <div id="firstModal" class="w3-modal w3-left-align">
       <div class="w3-modal-content w3-animate-top w3-card-4">
-        <header class="w3-container palette-1-dark w3-center w3-padding-32">
+        <header class="w3-container w3-center w3-padding-16">
           <span onclick="document.getElementById('firstModal').style.display='none'"
             class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
-          <h2 class="w3-wide">First Modal</h2>
-          <p class="w3-center"><i>Something</i></p>
         </header>
-        <div class="w3-container palette-2-dark side-padding-64">
-          <p>Hej!</p>
+        <div class="w3-container side-padding-16">
+          <div class="my-col-short">
+            <div class="component" id="sympList">
+            </div>
+          </div>
+          <div class="my-col-long">
+            <img src="images/heatGraph.png" style="width:100%"/>
+          </div>
         </div>
-        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="ffirst"></button>
-        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bfirst"></button>
       </div>
     </div>
 
@@ -270,7 +374,10 @@
   <!-- End Page Content -->
 
   <!--<img src="images/TruckIcon.png" id="truck1" style="width:4vw">-->
+  <!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="js/script.js"></script>
+  <script src="js/speedgauge.js"></script>
   <script src="bundle.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
