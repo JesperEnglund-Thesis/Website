@@ -1,5 +1,6 @@
 //MAPBOX STUFF
 var map;
+var mapboxgl;
 
 var trucks = [
   {
@@ -9,6 +10,7 @@ var trucks = [
     model: "L-series 2021",
     element : document.getElementById("truck1"),
     pos: [17.0, 59.0],
+    newPos: true, //To know whether distances to WS should be calculated anew.
     orig: [17.64809, 59.16777],
     origText: 'Sodertalje',
     dest: [14.19974, 57.76585],
@@ -82,6 +84,17 @@ var workshops = [
   }
 ]
 
+var hubs = {
+  stockholm: [18.03126, 59.29206],
+  sodertalje: [17.64809, 59.16777],
+  gothenburg: [12.00000, 57.69819],
+  malmo: [13.03502, 55.62952],
+  jonkoping: [14.19974, 57.76585],
+  linkoping: [15.66582, 58.42696],
+  norrkoping: [16.17880, 58.60902],
+  nykoping: [16.99747, 58.76082]
+}
+
 var sympListCreated = false;
 
 var upCount = 0;
@@ -97,6 +110,8 @@ var truckColors = ['greentrucks', 'yellowtrucks', 'redtrucks'];
 
 var pages = ['vehicleDetails', 'vehicles', 'contacts', 'knowledgeBase', 'analytics', 'settings']
 var activePage = "vehicles";
+
+var distances = [];
 
 function getRotation(destination, origin){
   var dLon = destination[1]-origin[1];
@@ -134,6 +149,48 @@ function updateVehicleMap(vid){
   var data = getVehicleData(vid);
   if (map.getSource('greentrucks')){
     map.getSource('greentrucks').setData(data);
+  }
+}
+
+function makeRequest(method, url) {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
+}
+
+async function getWSDist(vid){
+  if (trucks[vid]){
+    var pos = trucks[vid].pos;
+    for(i = 0; i < workshops.length; i++){
+      let ws = workshops[i].coordinates;
+      let url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + pos[0] + ',' + pos[1] + ';' + ws[0] + ',' + ws[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+      let result = await makeRequest("GET", url);
+      let json = JSON.parse(result);
+      let data = json.routes[0];
+      if (data.distance < trucks[vid].distanceWS || trucks[vid].newPos == true){
+        trucks[vid].newPos = false;
+        trucks[vid].distanceWS = data.distance;
+        distances[i] = data.distance;
+      }
+    }
   }
 }
 

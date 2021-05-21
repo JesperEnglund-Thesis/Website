@@ -186,7 +186,7 @@ process.umask = function() { return 0; };
 
 },{}],2:[function(require,module,exports){
 //mapbox
-var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
+mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiamVyYmEiLCJhIjoiY2tvYjl4M3FvMGVwcTJvcGdqdTVlYWluMyJ9.ZVh7TLcOCeiArbhGrBN4PA';
 map = new mapboxgl.Map({
@@ -195,17 +195,6 @@ style: 'mapbox://styles/mapbox/navigation-day-v1',
 center: [15.054, 58.577],
 zoom: 6.5
 });
-
-var hubs = {
-  stockholm: [18.03126, 59.29206],
-  sodertalje: [17.64809, 59.16777],
-  gothenburg: [12.00000, 57.69819],
-  malmo: [13.03502, 55.62952],
-  jonkoping: [14.19974, 57.76585],
-  linkoping: [15.66582, 58.42696],
-  norrkoping: [16.17880, 58.60902],
-  nykoping: [16.99747, 58.76082]
-}
 
 var canvas = map.getCanvasContainer();
 
@@ -255,8 +244,7 @@ function hideDetails(truck){
   );
 }
 
-var distances = [];
-
+/*
 async function getClosestWS(distances, vid){
   var closestDist;
   let mydistances = await distances;
@@ -267,9 +255,11 @@ async function getClosestWS(distances, vid){
   }
   trucks[vid].distanceWS = closestDist;
 }
+*/
+/*
+var distances = [];
 
 function getWSDist(pos, vid){
-  //var ws = workshops[key];
   var f = (function(){
     var req = [], i;
     var closestDist;
@@ -287,15 +277,6 @@ function getWSDist(pos, vid){
                   trucks[vid].distanceWS = data.distance;
                   distances[i] = data.distance;
                 }
-                /*
-                if (data.distance < closestDist){
-                  closestDist = data.distance;
-                  console.log(closestDist);
-                }*/
-                /*
-                console.log(workshops[i].city);
-                console.log('Response from request ' + i + ' [ ' + data.distance + ']');
-                */
               }
             };
             req[i].send();
@@ -303,26 +284,6 @@ function getWSDist(pos, vid){
     }
     trucks[vid].distanceWS = closestDist;
   })();
-}
-/*
-function getWSDist(pos, vid){
-  var closestDist = 9999999999;
-  for (var key in workshops){
-    var ws = workshops[key];
-    var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + pos[0] + ',' + pos[1] + ';' + ws[0] + ',' + ws[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
-    var req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onload = function() {
-      var json = JSON.parse(req.response);
-      var data = json.routes[0];
-      console.log(data.distance);
-      if (data.distance < closestDist){
-        closestDist = data.distance;
-      }
-      trucks[vid].distanceWS = closestDist;
-    }
-    req.send();
-  }
 }
 */
 
@@ -414,7 +375,7 @@ map.on('load', function() {
     var pos = truck.pos;
     getRoute(pos, dest, truck.id, 'remaining', '#f30');
     getRoute(start, pos, truck.id, 'driven', '#3887be');
-    getWSDist(pos, i);
+    //getWSDist(pos, i);
     //getClosestWS(distances, i);
     // Add starting point to the map
     map.addLayer({

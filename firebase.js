@@ -46,7 +46,7 @@ function getCurrLegCoords(place){
   }
 }
 
-function setVehicle1CurrentData(fbData){
+async function setVehicle1CurrentData(fbData){
   trucks[0].speed = fbData.speed;
   trucks[0].origText = fbData.route[0];
   trucks[0].destText = fbData.route[1];
@@ -55,17 +55,22 @@ function setVehicle1CurrentData(fbData){
   trucks[0].currLeg[1] = getCurrLegCoords(fbData.localroute[1]);
   trucks[0].downtime = fbData.totalDowntimeApprox;
   trucks[0].pos = trucks[0].currLeg[0];
+  trucks[0].newPos = true;
   trucks[0].rotation = getRotation(trucks[0].currLeg[1], trucks[0].currLeg[0])
   if (activePage == 'vehicleDetails'){
     var element = document.getElementById("vehicleDetails");
     loadDetails(element, 0);
-    loadInfo(0);
+    getWSDist(0).then(() => {
+      loadInfo(0);
+    });
     //Change pos of gauge pin
     changePosition(fbData.speed);
   }
   else if (activePage == 'vehicles') {
+    getWSDist(0).then(() => {
       loadPopup(0);
-      updateVehicleMap(0);
+    });
+    updateVehicleMap(0);
   }
 }
 
