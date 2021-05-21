@@ -57,49 +57,6 @@ function hideDetails(truck){
   );
 }
 
-/*
-async function getClosestWS(distances, vid){
-  var closestDist;
-  let mydistances = await distances;
-  for(i = 0; i < mydistances.length; i++){
-    if (mydistances[i] < closestDist || closestDist == undefined){
-      closestDist = mydistances[i];
-    }
-  }
-  trucks[vid].distanceWS = closestDist;
-}
-*/
-/*
-var distances = [];
-
-function getWSDist(pos, vid){
-  var f = (function(){
-    var req = [], i;
-    var closestDist;
-    for(i = 0; i < workshops.length; i++){
-        (function(i, closestDist){
-            var ws = workshops[i].coordinates;
-            req[i] = new XMLHttpRequest();
-            var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + pos[0] + ',' + pos[1] + ';' + ws[0] + ',' + ws[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
-            req[i].open("GET", url, true);
-            req[i].onreadystatechange = function(){
-              if (req[i].readyState === 4 && req[i].status === 200){
-                var json = JSON.parse(req[i].response);
-                var data = json.routes[0];
-                if (data.distance < trucks[vid].distanceWS || trucks[vid].distanceWS == undefined){
-                  trucks[vid].distanceWS = data.distance;
-                  distances[i] = data.distance;
-                }
-              }
-            };
-            req[i].send();
-        })(i, closestDist);
-    }
-    trucks[vid].distanceWS = closestDist;
-  })();
-}
-*/
-
 function addWSfeatures(){
   var features = [];
   for (var i = 0; i < workshops.length; i++){
@@ -120,6 +77,7 @@ function addWSfeatures(){
   return features;
 }
 
+/*
 function getRoute(start, end, vid, partofroute, col) {
   var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
   var req = new XMLHttpRequest();
@@ -179,6 +137,7 @@ function getRoute(start, end, vid, partofroute, col) {
   };
   req.send();
 }
+*/
 
 map.on('load', function() {
   for (i=0; i<trucks.length;i++){
@@ -186,8 +145,8 @@ map.on('load', function() {
     var start = truck.orig;
     var dest = truck.dest;
     var pos = truck.pos;
-    getRoute(pos, dest, truck.id, 'remaining', '#f30');
-    getRoute(start, pos, truck.id, 'driven', '#3887be');
+    //getRoute(pos, dest, truck.id, 'remaining', '#f30');
+    //getRoute(start, pos, truck.id, 'driven', '#3887be');
     //getWSDist(pos, i);
     //getClosestWS(distances, i);
     // Add starting point to the map
@@ -244,8 +203,8 @@ map.on('load', function() {
         'circle-color': '#f30'
       }
     });
-    getRoute(pos, dest, truck.id, 'remaining', '#f30');
-    getRoute(start, pos, truck.id, 'driven', '#3887be');
+    //getRoute(pos, dest, truck.id, 'remaining', '#f30');
+    //getRoute(start, pos, truck.id, 'driven', '#3887be');
   }
 
   //Add Workshops

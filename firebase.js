@@ -60,16 +60,26 @@ async function setVehicle1CurrentData(fbData){
   if (activePage == 'vehicleDetails'){
     var element = document.getElementById("vehicleDetails");
     loadDetails(element, 0);
-    getWSDist(0).then(() => {
-      loadInfo(0);
+    getRouteDist(trucks[0].orig, trucks[0].pos, 0, 'driven').then(() => {
+      getRouteDist(trucks[0].pos, trucks[0].dest, 0, 'remaining').then(() => {
+        getWSDist(0).then(() => {
+          loadInfo(0);
+        });
+      });
     });
     //Change pos of gauge pin
     changePosition(fbData.speed);
   }
   else if (activePage == 'vehicles') {
-    getWSDist(0).then(() => {
-      loadPopup(0);
+    getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be').then(() => {
+      getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30').then(() => {
+        getWSDist(0).then(() => {
+          loadPopup(0);
+        });
+      });
     });
+    getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be');
+    getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30');
     updateVehicleMap(0);
   }
 }
@@ -150,22 +160,3 @@ function write_rec_action(action, takeCont, ver){
       console.error("Error writing document: ", error);
   });
 }
-
-/*
-
-function write_rec_action(action){
-  db.collection("Vehicle").doc("CT_data").set({
-    action_rec: action,
-    ct_release_from_stand_down: false,
-    ct_req_control: false,
-    fault_correction: "No fault",
-    ct_ver: false
-  })
-  .then(() => {
-      console.log("Document successfully written!");
-  })
-  .catch((error) => {
-      console.error("Error writing document: ", error);
-  });
-}
-*/

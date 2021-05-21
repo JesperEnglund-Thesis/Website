@@ -194,6 +194,76 @@ async function getWSDist(vid){
   }
 }
 
+async function getRouteDist(start, end, vid, partofroute){
+  var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+  let result = await makeRequest('GET', url);
+  var json = JSON.parse(result);
+  var data = json.routes[0];
+  if (partofroute == 'driven'){
+    trucks[vid].distanceDriven = data.distance;
+  }
+  else{
+    trucks[vid].distanceLeft = data.distance;
+  }
+  var route = data.geometry.coordinates;
+  return route;
+}
+
+async function getRoute(start, end, vid, partofroute, col) {
+  var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+  let result = await makeRequest('GET', url);
+  var json = JSON.parse(result);
+  var data = json.routes[0];
+  if (partofroute == 'driven'){
+    trucks[vid].distanceDriven = data.distance;
+  }
+  else{
+    trucks[vid].distanceLeft = data.distance;
+  }
+  var route = data.geometry.coordinates;
+  var geojson = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: route
+    }
+  };
+  // if the route already exists on the map, reset it using setData
+  if (map.getSource(vid + partofroute + 'route')) {
+    map.getSource(vid + partofroute + 'route').setData(geojson);
+  } else { // otherwise, make a new request
+    map.addLayer({
+      id: vid + partofroute + 'route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {
+            'distance': ['get', 'distance'],
+            'duration': ['get', 'duration']
+          },
+          geometry: {
+            type: 'LineString',
+            coordinates: geojson
+          }
+        }
+      },
+      paint: {
+        'line-color': col,
+        'line-width': 5,
+        'line-opacity': 0.75
+      },
+      layout: {
+        'visibility': 'none',
+        'line-join': 'round',
+        'line-cap': 'round'
+      }
+    });
+  }
+}
+
 function showTruckCol(num){
   for (i=0; i<truckColors.length;i++) {
     var vis = 'none'
@@ -391,7 +461,6 @@ function getAirPressAlert(vid){
 function getBrakeEngAlert(vid){
   var returnstr = "";
   if (trucks[vid].symptoms.brakeeng == true){
-    console.log("HEJ");
     returnstr = 'P-BRAKE ENGAGED';
   }
   return returnstr
@@ -558,6 +627,7 @@ function loadDiagnose(vid){
 }
 
 function openVehicle(vid){
+  //Open Specific vehicle by clicking More-btn in popup
   var sections = document.getElementsByClassName("mySection");
   activePage = 'vehicleDetails';
   var vDetails;
