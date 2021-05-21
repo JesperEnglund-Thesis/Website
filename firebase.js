@@ -60,12 +60,13 @@ function setVehicle1CurrentData(fbData){
     var element = document.getElementById("vehicleDetails");
     loadDetails(element, 0);
     loadInfo(0);
+    //Change pos of gauge pin
+    changePosition(fbData.speed);
   }
   else if (activePage == 'vehicles') {
       loadPopup(0);
       updateVehicleMap(0);
   }
-  //changePosition(fbData.speed);
 }
 
 db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleHealth")
@@ -131,10 +132,9 @@ function setVehicle1DiagData(fbData){
   }
 }
 
-function write_rec_action(action, giveCont, takeCont, ver){
+function write_rec_action(action, takeCont, ver){
   db.collection("VehiclesTest").doc("Vehicle1").collection("commands").doc("command").set({
     action: action,
-    giveBackControl: giveCont,
     takeControl: takeCont,
     verifyDiagnose: ver
   })

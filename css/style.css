@@ -224,6 +224,11 @@
   overflow: scroll;
 }
 
+.testsmodal-comp{
+  height: 163px;
+  overflow: scroll;
+}
+
 .component {
   background-color: #FFFFFF;
   color: black;

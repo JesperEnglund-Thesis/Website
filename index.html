@@ -213,39 +213,14 @@
       </div>
       <div class="w3-row">
         <div class="w3-col s12 m6 w3-padding-32" style="padding-left:32px;">
-          <div class="component vehicle-comp" id="tests"><p class="header3">Tests</p>
+          <div class="component vehicle-comp" id="tests">
           </div>
         </div>
         <div class="w3-col s12 m6 w3-padding-32" style="padding-left:32px;padding-right:32px">
-          <div class="component vehicle-comp" id="actions"><p class="header3">Actions</p>
-            
+          <div class="component vehicle-comp" id="actions">
           </div>
         </div>
       </div>
-      <!--
-      <h2 class="w3-wide header">COMMANDS</h2>
-      <div class="w3-row" style="margin:0px !important">
-        <button class="w3-quarter w3-button clickable-container w3-padding-32"
-          onclick="write_rec_action('CARRY ON')">
-          <p style="font-size:20px">Carry on</p>
-        </button>
-        <button class="w3-quarter w3-button clickable-container w3-padding-32"
-          onclick="write_rec_action('WAIT FOR MECHANIC')">
-          <p style="font-size:20px">Wait for mechanic</p>
-        </button>
-        <button class="w3-quarter w3-button clickable-container w3-padding-32"
-          onclick="write_rec_action('GO TO SERVICE CENTER')">
-          <p style="font-size:20px">Go to service center</p>
-        </button>
-        <button class="w3-quarter w3-button clickable-container w3-padding-32"
-          onclick="write_rec_action('GO TO SERVICE CENTER AFTER ROUTE')">
-          <p style="font-size:20px">Service center after route</p>
-        </button>
-      </div>
-      <div id="recActionDisp" class="w3-container">
-
-      </div>
-      -->
     </div>
 
     <!-- Vehicles Section -->
@@ -356,19 +331,22 @@
     </div>
 
     <!-- Fourth Modal -->
-    <div id="fourthModal" class="w3-modal w3-left-align">
+    <div id="testsModal" class="w3-modal w3-left-align">
       <div class="w3-modal-content w3-animate-top w3-card-4">
-        <header class="w3-container palette-1-dark w3-center w3-padding-32">
-          <span onclick="document.getElementById('fourthModal').style.display='none'"
+        <header class="w3-container w3-center w3-padding-16">
+          <span onclick="document.getElementById('testsModal').style.display='none'"
             class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
-          <h2 class="w3-wide">Fourth Modal</h2>
-          <p class="w3-center"><i>Something</i></p>
         </header>
-        <div class="w3-container palette-2-dark side-padding-32">
-          <p>Hallå!</p>
+        <div class="w3-container side-padding-16">
+          <div class="my-col-short">
+            <div class="component testsmodal-comp" id="testLists">
+            </div>
+          </div>
+          <div class="my-col-long" id="testImg1">
+          </div>
+          <div id="testImg2">
+          </div>
         </div>
-        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="ffourth"></button>
-        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bfourth"></button>
       </div>
     </div>
   <!-- End Page Content -->

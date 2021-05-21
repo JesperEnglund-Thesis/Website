@@ -519,6 +519,7 @@ function openVehicle(vid){
   loadInfo(vid);
   loadDiagnose(vid);
   loadActions(vid);
+  loadTests(vid, 'tests');
 }
 
 var truckpopup;
@@ -570,7 +571,6 @@ var myActions = [
       route: trucks[0].destText,
       speed: 100
     },
-    giveBackControl: false,
     takeControl: true,
     verifyDiagnose: true
   },
@@ -580,7 +580,6 @@ var myActions = [
       route: trucks[0].destText,
       speed: 30
     },
-    giveBackControl: false,
     takeControl: true,
     verifyDiagnose: true
   },
@@ -590,7 +589,6 @@ var myActions = [
       route: workshops[4].city,
       speed: 100
     },
-    giveBackControl: false,
     takeControl: true,
     verifyDiagnose: true
   },
@@ -600,7 +598,6 @@ var myActions = [
       route: workshops[4].city,
       speed: 30
     },
-    giveBackControl: false,
     takeControl: true,
     verifyDiagnose: true
   },
@@ -610,7 +607,6 @@ var myActions = [
       route: workshops[5].city,
       speed: 100
     },
-    giveBackControl: false,
     takeControl: true,
     verifyDiagnose: true
   },
@@ -620,7 +616,6 @@ var myActions = [
       route: workshops[5].city,
       speed: 30
     },
-    giveBackControl: false,
     takeControl: true,
     verifyDiagnose: true
   },
@@ -630,18 +625,24 @@ var myActions = [
       route: null,
       speed: null
     },
-    giveBackControl: false,
     takeControl: false,
     verifyDiagnose: true
   }
 ];
 
-function setActDB(myaction, giveCont, takeCont, verify){
-  write_rec_action(myaction, giveCont, takeCont, verify);
+function setActDB(myaction, takeCont, verify){
+  write_rec_action(myaction, takeCont, verify);
 }
 
 function loadActions(vid){
   var actionsElem = document.getElementById("actions");
+  while (actionsElem.firstChild) {
+    actionsElem.removeChild(actionsElem.lastChild);
+  }
+  var header = document.createElement("p");
+  header.innerHTML = "Actions";
+  header.classList.add("header3");
+  actionsElem.appendChild(header);
   for (i = 0; i < myActions.length; i++){
     var listItem = document.createElement("a");
     listItem.classList.add("my-list-item");
@@ -663,11 +664,118 @@ function loadActions(vid){
       myActions[i].action.route = trucks[vid].destText;
     }
     let myaction = myActions[i].action;
-    let giveCont = myActions[i].giveBackControl;
     let takeCont = myActions[i].takeControl;
     let verify =  myActions[i].verifyDiagnose;
-    listItem.addEventListener('click', () => setActDB(myaction, giveCont, takeCont, verify), false);
+    listItem.addEventListener('click', () => setActDB(myaction, takeCont, verify), false);
     actionsElem.appendChild(listItem);
+  }
+}
+
+function dispTestsModal(vid, test){
+  let testsModal = document.getElementById('testsModal');
+  loadTests(vid, 'testLists');
+  dispTest(test);
+  testsModal.style.display='block';
+}
+
+function dispTest(test){
+  let img1Elem = document.getElementById("testImg1");
+  while (img1Elem.firstChild) {
+    img1Elem.removeChild(img1Elem.lastChild);
+  }
+  let img2Elem = document.getElementById("testImg2");
+  while (img2Elem.firstChild) {
+    img2Elem.removeChild(img2Elem.lastChild);
+  }
+  var img1 = document.createElement("img");
+  img1.style.width = "100%";
+  var img2 = document.createElement("img");
+  img2.style.width = "100%";
+  if (test == "restart"){
+    img1.src = "images/restartEng1.png";
+    img2.src = "images/restartEng2.png";
+  }
+  else if (test == "brake"){
+    img1.src = "images/brakeTest1.png";
+    img2.src = "images/brakeTest2.png";
+  }
+  else {
+    img1.src = "images/genTest1.png";
+    img2.src = "images/genTest2.png";
+  }
+  img1Elem.appendChild(img1);
+  img2Elem.appendChild(img2);
+}
+
+let myTests = [
+  {id: "restart", text: "Restart enginge", time: "Just now"},
+  {id: "brake", text: "Brake test", time: "Sep 14, 2020"},
+  {id: "other", text: "Test Placeholder", time:"N/A"},
+  {id: "other", text: "Test Placeholder", time:"N/A"},
+  {id: "other", text: "Test Placeholder", time:"N/A"},
+  {id: "other", text: "Test Placeholder", time:"N/A"},
+  {id: "other", text: "Test Placeholder", time:"N/A"},
+  {id: "other", text: "Test Placeholder", time:"N/A"},
+  {id: "other", text: "Test Placeholder", time:"N/A"}
+];
+
+function loadTests(vid, eid){
+  var testsElem = document.getElementById(eid);
+  while (testsElem.firstChild) {
+    testsElem.removeChild(testsElem.lastChild);
+  }
+  var header = document.createElement("p");
+  header.innerHTML = "Tests";
+  header.classList.add("header3");
+  testsElem.appendChild(header);
+
+  for (i = 0; i < myTests.length; i++){
+    let listItem = document.createElement("a");
+    listItem.classList.add("my-list-item");
+
+    let listItemdiv = document.createElement("div");
+    listItemdiv.classList.add("w3-half");
+    listItemdiv.style.textAlign = "left";
+    if (myTests[i].id == "other"){
+      listItemdiv.innerHTML = myTests[i].text + (i-1);
+    }
+    else{
+      listItemdiv.innerHTML = myTests[i].text;
+    }
+    listItem.appendChild(listItemdiv);
+
+    if (i == myTests.length - 1){
+      if (myTests.length < 8){
+        listItem.style.borderBottom = "1px solid #DFE0EB";
+      }
+      else{
+        listItem.style.borderBottomLeftRadius = "8px";
+        listItem.style.borderBottomRightRadius = "8px";
+      }
+    }
+    listItem.style.borderTop = "1px solid #DFE0EB";
+    listItem.href = "#test" + (i+3).toString();
+    listItem.id = "test" + (i+3).toString();
+    listItem.style.padding = "16px";
+    let testid = myTests[i].id;
+    if (eid == "tests"){
+      listItem.addEventListener('click', () => dispTestsModal(vid, testid), false);
+      listItem.href = "#test" + (i+3).toString() + "modal";
+      listItem.id = "test" + (i+3).toString();
+
+      let listItemtime = document.createElement("div");
+      listItemtime.classList.add("w3-half");
+      listItemtime.style.textAlign = "right";
+      listItemtime.style.color = "#DFE0EB";
+      listItemtime.innerHTML = "Most recent: " + myTests[i].time;
+      listItem.appendChild(listItemtime);
+    }
+    else {
+      listItem.addEventListener('click', () => dispTest(testid), false);
+      listItem.href = "#test" + (i+3).toString() + "modal";
+      listItem.id = "test" + (i+3).toString() + "modal";
+    }
+    testsElem.appendChild(listItem);
   }
 }
 
