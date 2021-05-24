@@ -152,6 +152,95 @@ function updateVehicleMap(vid){
   }
 }
 
+function showTruckDetails(e){
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  var id = e.features[0].properties.id;
+  var distToDest = e.features[0].properties.distToDest;
+  showRoute(trucks[id]);
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+
+  truckpopup = new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  //.setHTML(htmlcode)
+  .setMaxWidth("800px")
+  .addTo(map);
+  loadPopup(id);
+
+  truckpopup.on('close', function(e) {
+    for (i=0; i<trucks.length; i++){
+      hideDetails(trucks[0]);
+    }
+  });
+}
+
+function showRoute(truck) {
+  map.setLayoutProperty(
+    truck.id + 'driven' + 'route',
+    'visibility',
+    'visible'
+  );
+  map.setLayoutProperty(
+    truck.id + 'remaining' + 'route',
+    'visibility',
+    'visible'
+  );
+  map.setLayoutProperty(
+    truck.id + 'start',
+    'visibility',
+    'visible'
+  );
+  map.setLayoutProperty(
+    truck.id + 'end',
+    'visibility',
+    'visible'
+  );
+}
+
+function hideDetails(truck){
+  map.setLayoutProperty(
+    truck.id + 'driven' + 'route',
+    'visibility',
+    'none'
+  );
+  map.setLayoutProperty(
+    truck.id + 'remaining' + 'route',
+    'visibility',
+    'none'
+  );
+  map.setLayoutProperty(
+    truck.id + 'start',
+    'visibility',
+    'none'
+  );
+  map.setLayoutProperty(
+    truck.id + 'end',
+    'visibility',
+    'none'
+  );
+}
+
+function addWSfeatures(){
+  var features = [];
+  for (var i = 0; i < workshops.length; i++){
+    var feature = {
+        // feature for Mapbox DC
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': workshops[i].coordinates
+        },
+        'properties': {
+        'title': workshops[i].title,
+        'description':workshops[i].description
+      }
+    };
+    features[i] = feature;
+  }
+  return features;
+}
+
 function makeRequest(method, url) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
@@ -521,6 +610,16 @@ function loadLog(id){
   }
 }
 
+function sendComment(comment){
+  if (comment != ""){
+    var time = new Date().toLocaleString();
+    write_comment(comment, "Jesper Englund", time);
+  }
+  else {
+    console.log("Write some text to add a comment");
+  }
+}
+
 function loadComments(id){
   var commList = document.getElementById("comments");
   while (commList.firstChild) {
@@ -530,6 +629,31 @@ function loadComments(id){
   header.innerHTML = "Comments";
   header.classList.add("header3");
   commList.appendChild(header);
+
+  var newCommrow = document.createElement("div");
+  newCommrow.classList.add("w3-row");
+  commList.appendChild(newCommrow)
+  var newCommCol1 = document.createElement("div");
+  newCommCol1.classList.add("my-col-xlong");
+  var newCommCol2 = document.createElement("div");
+  newCommCol2.classList.add("my-col-xshort");
+  newCommCol2.classList.add("w3-display-container");
+  newCommrow.appendChild(newCommCol1);
+  newCommrow.appendChild(newCommCol2);
+
+  var commentField = document.createElement("textarea");
+  commentField.classList.add("comm-field");
+  commentField.placeholder = "New comment...";
+  commentField.style.resize = "none";
+  newCommCol1.appendChild(commentField);
+
+  var sendBtn = document.createElement("img");
+  sendBtn.classList.add("send-btn");
+  sendBtn.classList.add("w3-display-bottommiddle");
+  sendBtn.src = "images/sendBtn.png";
+  sendBtn.addEventListener('click', () => sendComment(commentField.value), false);
+  newCommCol2.appendChild(sendBtn);
+
   for (i = 0; i < trucks[id].comments.length; i++){
     var listItem = document.createElement("a");
     listItem.classList.add("my-list-item");
@@ -1023,4 +1147,9 @@ function w3_open() {
 function w3_close() {
   document.getElementById("mySidebar").style.display = "none";
   document.getElementById("myOverlay").style.display = "none";
+}
+
+function toggle3dMap(){
+  let unity = document.getElementById("unityStuff");
+  unity.style.display = "block";
 }

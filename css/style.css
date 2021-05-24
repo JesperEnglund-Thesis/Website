@@ -123,6 +123,20 @@
   width: 60%;
   padding: 10px;
 }
+
+.my-col-xlong {
+  float: left;
+  width: 80%;
+  padding: 10px;
+}
+
+.my-col-xshort {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  padding-left: 0px;
+  height: 10vh;
+}
 /* Clear floats after the columns */
 .my-row:after {
   content: "";
@@ -369,4 +383,22 @@
 .info-item {
   color: #FFF;
   text-align: left;
+}
+
+.comm-field {
+  height: 10vh;
+  width: 100%;
+}
+
+.send-btn {
+  width: 50%;
+  margin:auto;
+}
+
+.send-btn:hover {
+  cursor:pointer;
+}
+
+#unityStuff {
+  display: none;
 }

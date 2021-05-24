@@ -198,144 +198,12 @@ zoom: 6.5
 
 var canvas = map.getCanvasContainer();
 
-function showRoute(truck) {
-  map.setLayoutProperty(
-    truck.id + 'driven' + 'route',
-    'visibility',
-    'visible'
-  );
-  map.setLayoutProperty(
-    truck.id + 'remaining' + 'route',
-    'visibility',
-    'visible'
-  );
-  map.setLayoutProperty(
-    truck.id + 'start',
-    'visibility',
-    'visible'
-  );
-  map.setLayoutProperty(
-    truck.id + 'end',
-    'visibility',
-    'visible'
-  );
-}
-
-function hideDetails(truck){
-  map.setLayoutProperty(
-    truck.id + 'driven' + 'route',
-    'visibility',
-    'none'
-  );
-  map.setLayoutProperty(
-    truck.id + 'remaining' + 'route',
-    'visibility',
-    'none'
-  );
-  map.setLayoutProperty(
-    truck.id + 'start',
-    'visibility',
-    'none'
-  );
-  map.setLayoutProperty(
-    truck.id + 'end',
-    'visibility',
-    'none'
-  );
-}
-
-function addWSfeatures(){
-  var features = [];
-  for (var i = 0; i < workshops.length; i++){
-    var feature = {
-        // feature for Mapbox DC
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Point',
-          'coordinates': workshops[i].coordinates
-        },
-        'properties': {
-        'title': workshops[i].title,
-        'description':workshops[i].description
-      }
-    };
-    features[i] = feature;
-  }
-  return features;
-}
-
-/*
-function getRoute(start, end, vid, partofroute, col) {
-  var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
-  var req = new XMLHttpRequest();
-  req.open('GET', url, true);
-  req.onload = function() {
-    var json = JSON.parse(req.response);
-    var data = json.routes[0];
-    if (partofroute == 'driven'){
-      trucks[vid].distanceDriven = data.distance;
-    }
-    else{
-      trucks[vid].distanceLeft = data.distance;
-    }
-    var route = data.geometry.coordinates;
-    var geojson = {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'LineString',
-        coordinates: route
-      }
-    };
-    // if the route already exists on the map, reset it using setData
-    if (map.getSource(vid + partofroute + 'route')) {
-      map.getSource(vid + partofroute + 'route').setData(geojson);
-    } else { // otherwise, make a new request
-      map.addLayer({
-        id: vid + partofroute + 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {
-              'distance': ['get', 'distance'],
-              'duration': ['get', 'duration']
-            },
-            geometry: {
-              type: 'LineString',
-              coordinates: geojson
-            }
-          }
-        },
-        paint: {
-          'line-color': col,
-          'line-width': 5,
-          'line-opacity': 0.75
-        },
-        layout: {
-          'visibility': 'none',
-          'line-join': 'round',
-          'line-cap': 'round'
-        }
-      });
-    }
-    // add turn instructions here at the end
-  };
-  req.send();
-}
-*/
-
 map.on('load', function() {
   for (i=0; i<trucks.length;i++){
     var truck = trucks[i];
     var start = truck.orig;
     var dest = truck.dest;
     var pos = truck.pos;
-    //getRoute(pos, dest, truck.id, 'remaining', '#f30');
-    //getRoute(start, pos, truck.id, 'driven', '#3887be');
-    //getWSDist(pos, i);
-    //getClosestWS(distances, i);
     // Add starting point to the map
     map.addLayer({
       id: truck.id + 'start',
@@ -390,8 +258,6 @@ map.on('load', function() {
         'circle-color': '#f30'
       }
     });
-    //getRoute(pos, dest, truck.id, 'remaining', '#f30');
-    //getRoute(start, pos, truck.id, 'driven', '#3887be');
   }
 
   //Add Workshops
@@ -584,29 +450,6 @@ map.on('click', 'greentrucks', function (e) {
 map.on('click', 'yellowtrucks', function (e) {
   showTruckDetails(e);
 });
-
-function showTruckDetails(e){
-  var coordinates = e.features[0].geometry.coordinates.slice();
-  var id = e.features[0].properties.id;
-  var distToDest = e.features[0].properties.distToDest;
-  showRoute(trucks[id]);
-  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-  }
-
-  truckpopup = new mapboxgl.Popup()
-  .setLngLat(coordinates)
-  //.setHTML(htmlcode)
-  .setMaxWidth("800px")
-  .addTo(map);
-  loadPopup(id);
-
-  truckpopup.on('close', function(e) {
-    for (i=0; i<trucks.length; i++){
-      hideDetails(trucks[0]);
-    }
-  });
-}
 
 },{"mapbox-gl/dist/mapbox-gl.js":3}],3:[function(require,module,exports){
 (function (process){(function (){

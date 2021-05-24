@@ -57,31 +57,21 @@ async function setVehicle1CurrentData(fbData){
   trucks[0].pos = trucks[0].currLeg[0];
   trucks[0].newPos = true;
   trucks[0].rotation = getRotation(trucks[0].currLeg[1], trucks[0].currLeg[0])
-  if (activePage == 'vehicleDetails'){
-    var element = document.getElementById("vehicleDetails");
-    loadDetails(element, 0);
-    getRouteDist(trucks[0].orig, trucks[0].pos, 0, 'driven').then(() => {
-      getRouteDist(trucks[0].pos, trucks[0].dest, 0, 'remaining').then(() => {
-        getWSDist(0).then(() => {
-          loadInfo(0);
-        });
+  var element = document.getElementById("vehicleDetails");
+  loadDetails(element, 0);
+  changePosition(fbData.speed);
+  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be').then(() => {
+    getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30').then(() => {
+      getWSDist(0).then(() => {
+        loadPopup(0);
+        loadInfo(0);
       });
     });
-    //Change pos of gauge pin
-    changePosition(fbData.speed);
-  }
-  else if (activePage == 'vehicles') {
-    getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be').then(() => {
-      getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30').then(() => {
-        getWSDist(0).then(() => {
-          loadPopup(0);
-        });
-      });
-    });
-    getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be');
-    getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30');
-    updateVehicleMap(0);
-  }
+  });
+  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be');
+  getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30');
+  updateVehicleMap(0);
+
 }
 
 db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleHealth")
@@ -152,6 +142,22 @@ function write_rec_action(action, takeCont, ver){
     action: action,
     takeControl: takeCont,
     verifyDiagnose: ver
+  })
+  .then(() => {
+      console.log("Document successfully written!");
+  })
+  .catch((error) => {
+      console.error("Error writing document: ", error);
+  });
+}
+
+function write_comment(comment, sender, time){
+  db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("comments").update({
+    comments: firebase.firestore.FieldValue.arrayUnion({
+      comment: comment,
+      sender: sender,
+      time: time
+    })
   })
   .then(() => {
       console.log("Document successfully written!");
