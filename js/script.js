@@ -933,8 +933,8 @@ var myActions = [
   {
     text: "Finish route, full speed",
     action: {
-      route: trucks[0].destText,
-      speed: 100
+      route: "mgoal",
+      speed: "Vnormal"
     },
     takeControl: true,
     verifyDiagnose: true
@@ -942,8 +942,8 @@ var myActions = [
   {
     text: "Finish route, reduced speed",
     action: {
-      route: trucks[0].destText,
-      speed: 30
+      route: "mgoal",
+      speed: "Vred"
     },
     takeControl: true,
     verifyDiagnose: true
@@ -951,8 +951,8 @@ var myActions = [
   {
     text: "Go to workshop 1, full speed",
     action: {
-      route: workshops[4].city,
-      speed: 100
+      route: "W1",
+      speed: "Vnormal"
     },
     takeControl: true,
     verifyDiagnose: true
@@ -960,8 +960,8 @@ var myActions = [
   {
     text: "Go to workshop 1, reduced speed",
     action: {
-      route: workshops[4].city,
-      speed: 30
+      route: "W1",
+      speed: "Vred"
     },
     takeControl: true,
     verifyDiagnose: true
@@ -969,8 +969,8 @@ var myActions = [
   {
     text: "Go to workshop 2, full speed",
     action: {
-      route: workshops[5].city,
-      speed: 100
+      route: "W2",
+      speed: "Vnormal"
     },
     takeControl: true,
     verifyDiagnose: true
@@ -978,8 +978,8 @@ var myActions = [
   {
     text: "Go to workshop 2, reduced speed",
     action: {
-      route: workshops[5].city,
-      speed: 30
+      route: "W2",
+      speed: "Vred"
     },
     takeControl: true,
     verifyDiagnose: true

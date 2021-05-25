@@ -154,7 +154,6 @@ function setVehicle1DiagData(fbData){
       likelihood: fbData.dia[i].likelyhood,
       prognoses: fbData.dia[i].prognoses
     }
-    console.log("diag: " + diag);
     trucks[0].diagnoses[i] = elem;
   }
   if (activePage == 'vehicleDetails'){
