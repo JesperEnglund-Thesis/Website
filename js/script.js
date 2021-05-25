@@ -682,7 +682,7 @@ function loadLog(id){
     time.classList.add("item-section-short");
     type.innerHTML = "<p>" + trucks[id].log[i].type + "</p>";
     content.innerHTML = "<p>" + trucks[id].log[i].content + "</p>";
-    time.innerHTML = "<p>" + trucks[id].log[i].time + "</p>";
+    time.innerHTML = "<p>" + trucks[id].log[i].occ_time + "</p>";
     listItem.appendChild(type);
     listItem.appendChild(content);
     listItem.appendChild(time);
@@ -785,7 +785,7 @@ function loadDiagnose(vid){
     diagnosisElem.removeChild(diagnosisElem.lastChild);
   }
   for (i = 0; i < trucks[vid].diagnoses.length; i++){
-    var diagnosistext;
+    var diagnosistext = "unrecognized";
     var prognosistext;
     if (trucks[vid].diagnoses[i].diagnose == "nofault"){
       diagnosistext = "No fault";
