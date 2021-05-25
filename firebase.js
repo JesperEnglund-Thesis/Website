@@ -51,8 +51,14 @@ async function setVehicle1CurrentData(fbData){
   trucks[0].origText = fbData.route[0];
   trucks[0].destText = fbData.route[1];
   trucks[0].currLegText = fbData.localroute;
-  trucks[0].currLeg[0] = getCurrLegCoords(fbData.localroute[0]);
-  trucks[0].currLeg[1] = getCurrLegCoords(fbData.localroute[1]);
+  if (fbData.mission_finished){
+    trucks[0].currLeg[0] = getCurrLegCoords(fbData.localroute[1]);
+    trucks[0].currLeg[1] = getCurrLegCoords(fbData.localroute[1])
+  }
+  else{
+    trucks[0].currLeg[0] = getCurrLegCoords(fbData.localroute[0]);
+    trucks[0].currLeg[1] = getCurrLegCoords(fbData.localroute[1]);
+  }
   trucks[0].downtime = fbData.totalDowntimeApprox;
   trucks[0].pos = trucks[0].currLeg[0];
   trucks[0].newPos = true;
@@ -60,17 +66,27 @@ async function setVehicle1CurrentData(fbData){
   var element = document.getElementById("vehicleDetails");
   loadDetails(element, 0);
   changePosition(fbData.speed);
-  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be').then(() => {
-    getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30').then(() => {
+  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "map").then(() => {
+    getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30', "map").then(() => {
       getWSDist(0).then(() => {
-        loadPopup(0);
-        loadInfo(0);
+        loadPopup(0, "map");
+        if (activePage == 'vehicleDetails'){
+          loadPopup(0, "mapspecific");
+          loadInfo(0);
+          showRoute(trucks[0], "mapspecific");
+        }
       });
     });
   });
-  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be');
-  getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30');
-  updateVehicleMap(0);
+  updateVehicleMap(0, "map");
+  updateVehicleMap(0, "mapspecific");
+  if (activePage == 'vehicleDetails'){
+    showPopup(0, "mapspecific");
+  }
+  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "map");
+  getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30', "map");
+  getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "mapspecific");
+  getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30', "mapspecific");
 
 }
 
@@ -87,25 +103,25 @@ function setVehicle1HealthData(fbData){
   trucks[0].symptoms.oillevel = fbData.symptoms.oil_low_y;
   trucks[0].symptoms.brakeeng = fbData.symptoms.p_brake_eng;
   getTruckCol(setVehicleCounts);
+  getTruckColSpec();
   updateSymptomsList(0);
   if (activePage == 'vehicleDetails'){
     var element = document.getElementById("vehicleDetails");
     loadDetails(element, 0);
+    loadPopup(0, "mapspecific");
   }
   else if (activePage == 'vehicles') {
-      loadPopup(0);
+      loadPopup(0, "map");
   }
 }
 
-db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleLog").get()
-  .then(querySnapshot => {
-    querySnapshot.docs.map(doc => {
+db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("VehicleLogs")
+    .onSnapshot(function(doc) {
       setVehicle1LogData(doc.data());
-    });
-  });
+});
 
 function setVehicle1LogData(fbData){
-  trucks[0].log.push(fbData);
+  trucks[0].log = fbData.Logs;
   if (activePage == 'vehicleDetails'){
     loadLog(0);
   }
@@ -129,9 +145,17 @@ db.collection("VehiclesTest").doc("Vehicle1").collection("diagnosis").doc("diagn
 });
 
 function setVehicle1DiagData(fbData){
-  trucks[0].diagnosis.diagnose = fbData.dia[0].diagnose;
-  trucks[0].diagnosis.likelihood = fbData.dia[0].likelyhood;
-  trucks[0].diagnosis.prognoses = fbData.dia[0].prognoses;
+  for (i = 0; i < fbData.dia.length; i++){
+    var diagnosecode = fbData.dia[i].diagnose;
+    var diag = diagnosecode.split(",");
+    var elem = {
+      diagnose: diag[0],
+      severity: diag[1],
+      likelihood: fbData.dia[i].likelyhood,
+      prognoses: fbData.dia[i].prognoses
+    }
+    trucks[0].diagnoses[i] = elem;
+  }
   if (activePage == 'vehicleDetails'){
     loadDiagnose(0);
   }

@@ -2,6 +2,8 @@
 var map;
 var mapboxgl;
 
+var mapspecific;
+
 var trucks = [
   {
     id: 0,
@@ -35,12 +37,7 @@ var trucks = [
     symptomList: [],
     log: [],
     comments: [],
-    diagnosis: {
-      diagnose: "",
-      likelihood: 0,
-      prognoses: [],
-      avgLife: ""
-    },
+    diagnoses: [],
     rotation: 0
   }
 ];
@@ -145,76 +142,142 @@ function getVehicleData(vid){
   return data;
 }
 
-function updateVehicleMap(vid){
+function updateVehicleMap(vid, mapname){
   var data = getVehicleData(vid);
-  if (map.getSource('greentrucks')){
-    map.getSource('greentrucks').setData(data);
+  if (eval(mapname).getSource('greentrucks')){
+    eval(mapname).getSource('greentrucks').setData(data);
+  }
+  if (eval(mapname).getSource('yellowtrucks')){
+    eval(mapname).getSource('yellowtrucks').setData(data);
+  }
+  if (eval(mapname).getSource('redtrucks')){
+    eval(mapname).getSource('redtrucks').setData(data);
+  }
+  if (mapname == "mapspecific"){
+    mapspecific.flyTo({
+      center: trucks[0].pos
+    });
   }
 }
 
-function showTruckDetails(e){
+function showTruckDetails(e, mapname){
   var coordinates = e.features[0].geometry.coordinates.slice();
   var id = e.features[0].properties.id;
   var distToDest = e.features[0].properties.distToDest;
-  showRoute(trucks[id]);
   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
   }
 
+  /*
+  if (truckpopup){
+    truckpopup.remove();
+  }
+  */
   truckpopup = new mapboxgl.Popup()
   .setLngLat(coordinates)
   //.setHTML(htmlcode)
   .setMaxWidth("800px")
-  .addTo(map);
-  loadPopup(id);
+  .addTo(eval(mapname));
+  loadPopup(id, mapname);
 
   truckpopup.on('close', function(e) {
     for (i=0; i<trucks.length; i++){
-      hideDetails(trucks[0]);
+      hideDetails(trucks[i], mapname);
+    }
+  });
+  showRoute(trucks[id], mapname);
+}
+
+function showTruckDetailsSpec(vid, mapname){
+  getRoute(trucks[vid].orig, trucks[vid].pos, vid, 'driven', '#3887be', "mapspecific").then(() => {
+    getRoute(trucks[vid].pos, trucks[vid].dest, vid, 'remaining', '#f30', "mapspecific").then(() => {
+      getWSDist(vid).then(() => {
+        loadPopup(vid, "mapspecific");
+        showRoute(trucks[vid], mapname);
+      });
+    });
+  });
+  showPopup(vid, mapname);
+  /*
+  var coordinates = trucks[vid].pos;
+  truckpopup = new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  //.setHTML(htmlcode)
+  .setMaxWidth("800px")
+  .addTo(eval(mapname));
+  //loadPopup(vid);
+
+  truckpopup.on('close', function(e) {
+    for (i=0; i<trucks.length; i++){
+      hideDetails(trucks[i], mapname);
+    }
+  });
+  */
+}
+
+function showPopup(vid, mapname){
+  var coordinates = trucks[vid].pos;
+  if (mapname == "mapspecific"){
+    if (truckpopup){
+      truckpopup.remove();
+    }
+  }
+  truckpopup = new mapboxgl.Popup()
+  .setLngLat(coordinates)
+  //.setHTML(htmlcode)
+  .setMaxWidth("800px")
+  .addTo(eval(mapname));
+  //loadPopup(vid);
+
+  truckpopup.on('close', function(e) {
+    for (i=0; i<trucks.length; i++){
+      hideDetails(trucks[i], mapname);
     }
   });
 }
 
-function showRoute(truck) {
-  map.setLayoutProperty(
-    truck.id + 'driven' + 'route',
-    'visibility',
-    'visible'
-  );
-  map.setLayoutProperty(
-    truck.id + 'remaining' + 'route',
-    'visibility',
-    'visible'
-  );
-  map.setLayoutProperty(
-    truck.id + 'start',
-    'visibility',
-    'visible'
-  );
-  map.setLayoutProperty(
-    truck.id + 'end',
-    'visibility',
-    'visible'
-  );
+function showRoute(truck, mapname) {
+  if (eval(mapname).getSource(truck.id + 'start')){
+    eval(mapname).setLayoutProperty(
+      truck.id + 'driven' + 'route',
+      'visibility',
+      'visible'
+    );
+    eval(mapname).setLayoutProperty(
+      truck.id + 'remaining' + 'route',
+      'visibility',
+      'visible'
+    );
+    eval(mapname).setLayoutProperty(
+      truck.id + 'start',
+      'visibility',
+      'visible'
+    );
+    eval(mapname).setLayoutProperty(
+      truck.id + 'end',
+      'visibility',
+      'visible'
+    );
+  }
 }
 
-function hideDetails(truck){
-  map.setLayoutProperty(
+function hideDetails(truck, mapname){
+  eval(mapname).setLayoutProperty(
     truck.id + 'driven' + 'route',
     'visibility',
     'none'
   );
-  map.setLayoutProperty(
+  eval(mapname).setLayoutProperty(
     truck.id + 'remaining' + 'route',
     'visibility',
     'none'
   );
-  map.setLayoutProperty(
+  eval(mapname).setLayoutProperty(
     truck.id + 'start',
     'visibility',
     'none'
   );
-  map.setLayoutProperty(
+  eval(mapname).setLayoutProperty(
     truck.id + 'end',
     'visibility',
     'none'
@@ -298,7 +361,7 @@ async function getRouteDist(start, end, vid, partofroute){
   return route;
 }
 
-async function getRoute(start, end, vid, partofroute, col) {
+async function getRoute(start, end, vid, partofroute, col, mapname) {
   var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
   let result = await makeRequest('GET', url);
   var json = JSON.parse(result);
@@ -319,10 +382,10 @@ async function getRoute(start, end, vid, partofroute, col) {
     }
   };
   // if the route already exists on the map, reset it using setData
-  if (map.getSource(vid + partofroute + 'route')) {
-    map.getSource(vid + partofroute + 'route').setData(geojson);
+  if (eval(mapname).getSource(vid + partofroute + 'route')) {
+    eval(mapname).getSource(vid + partofroute + 'route').setData(geojson);
   } else { // otherwise, make a new request
-    map.addLayer({
+    eval(mapname).addLayer({
       id: vid + partofroute + 'route',
       type: 'line',
       source: {
@@ -353,13 +416,13 @@ async function getRoute(start, end, vid, partofroute, col) {
   }
 }
 
-function showTruckCol(num){
+function showTruckCol(num, mapname){
   for (i=0; i<truckColors.length;i++) {
     var vis = 'none'
     if (i == num){
       vis = 'visible'
     }
-    map.setLayoutProperty(
+    eval(mapname).setLayoutProperty(
       truckColors[i],
       'visibility',
       vis
@@ -384,18 +447,18 @@ function updateSymptomsList(id){
   trucks[id].symptomList = sympList;
 }
 
-function dispSympModal(id){
+function dispSympModal(vid){
   var symplst = document.getElementById('sympList');
   if (sympListCreated != true){
     var header = document.createElement("p");
     header.innerHTML = "Detected Symptoms";
     header.classList.add("header3");
     symplst.appendChild(header);
-    for (i = 0; i < trucks[id].symptomList.length; i++){
+    for (i = 0; i < trucks[vid].symptomList.length; i++){
       var listItem = document.createElement("a");
       listItem.classList.add("my-list-item");
-      listItem.innerHTML = trucks[id].symptomList[i];
-      if (i == trucks[id].symptomList.length - 1){
+      listItem.innerHTML = trucks[vid].symptomList[i];
+      if (i == trucks[vid].symptomList.length - 1){
         listItem.style.borderBottomLeftRadius = "8px";
         listItem.style.borderBottomRightRadius = "8px";
       }
@@ -412,6 +475,35 @@ function dispSympModal(id){
   document.getElementById('firstModal').style.display='block';
 }
 
+function dispInfoModal(vid){
+  document.getElementById('infoModal').style.display='block';
+  mapspecific.resize();
+  mapspecific.flyTo({
+    center: trucks[0].pos
+  });
+  getTruckColSpec();
+  showTruckDetailsSpec(vid, "mapspecific");
+  showRoute(trucks[vid], "mapspecific");
+}
+
+function getTruckColSpec(){
+  if (mapspecific != undefined){
+    if (mapspecific.getLayer("greentrucks") && mapspecific.getLayer("redtrucks") && mapspecific.getLayer("yellowtrucks")) {
+      for (i=0; i<trucks.length;i++){
+        if (trucks[i].gsh <= 50 && trucks[i].gsh > 20){
+          showTruckCol(1, "mapspecific");
+        }
+        else if (trucks[i].gsh <= 20){
+          showTruckCol(2, "mapspecific");
+        }
+        else{
+          showTruckCol(0, "mapspecific");
+        }
+      }
+    }
+  }
+}
+
 function getTruckCol(vCountCallback){
   if (map != undefined){
     if (map.getLayer("greentrucks") && map.getLayer("redtrucks") && map.getLayer("yellowtrucks")) {
@@ -423,29 +515,29 @@ function getTruckCol(vCountCallback){
         if (trucks[i].gsh <= 50 && trucks[i].gsh > 20){
           alertedCount += 1;
           if (mapalerted == true){
-            showTruckCol(1);
+            showTruckCol(1, "map");
           }
           else{
-            showTruckCol(-1);
+            showTruckCol(-1, "map");
           }
         }
         else if (trucks[i].gsh <= 20){
           alertedCount += 1;
           downCount += 1;
           if (mapalerted == true || mapdown == true){
-            showTruckCol(2);
+            showTruckCol(2, "map");
           }
           else{
-            showTruckCol(-1);
+            showTruckCol(-1, "map");
           }
         }
         else{
           upCount += 1;
           if (mapup == true){
-            showTruckCol(0);
+            showTruckCol(0, "map");
           }
           else{
-            showTruckCol(-1);
+            showTruckCol(-1, "map");
           }
         }
       }
@@ -692,60 +784,82 @@ function loadDiagnose(vid){
   while (diagnosisElem.firstChild) {
     diagnosisElem.removeChild(diagnosisElem.lastChild);
   }
-  var row1 = document.createElement("div");
-  row1.classList.add("w3-row");
-  var diagnose = document.createElement("div");
-  diagnose.innerHTML = trucks[0].diagnosis.diagnose;
-  diagnose.classList.add("tooltip");
-  diagnose.classList.add("info-item");
-  diagnose.classList.add("diagnosis-elem");
-  var diagnosett = document.createElement("span");
-  diagnosett.innerHTML = "Proposed Diagnose";
-  diagnosett.classList.add("tooltiptext");
-  diagnose.appendChild(diagnosett);
-  row1.appendChild(diagnose);
-  diagnosisElem.appendChild(row1);
+  for (i = 0; i < trucks[vid].diagnoses.length; i++){
+    var diagnosistext;
+    var prognosistext;
+    if (trucks[vid].diagnoses[i].diagnose == "nofault"){
+      diagnosistext = "No fault";
+    }
+    else if (trucks[vid].diagnoses[i].diagnose == "air_leak_Y" || trucks[vid].diagnoses[i].diagnose == "air_leak_R"){
+      diagnosistext = "Air leakage";
+    }
+    else if (trucks[vid].diagnoses[i].diagnose == "bearing_fault"){
+      diagnosistext = "Worn bearings";
+    }
+    else if (trucks[vid].diagnoses[i].diagnose == "appl_breaks"){
+      diagnosistext = "Engaged brakes";
+    }
+    var row1 = document.createElement("div");
+    row1.classList.add("w3-row");
+    var diagnose = document.createElement("div");
+    diagnose.innerHTML = diagnosistext;
+    if (trucks[vid].diagnoses[i].severity == "SAFE"){
+      diagnose.classList.add("greentag");
+    }
+    else if (trucks[vid].diagnoses[i].severity == "NOTSEVERE"){
+      diagnose.classList.add("yellowtag");
+    }
+    else {
+      diagnose.classList.add("redtag");
+    }
+    diagnose.classList.add("tooltip");
+    diagnose.classList.add("info-item");
+    diagnose.classList.add("diagnosis-elem");
+    var diagnosett = document.createElement("span");
+    diagnosett.innerHTML = "Proposed Diagnose";
+    diagnosett.classList.add("tooltiptext");
+    diagnose.appendChild(diagnosett);
+    row1.appendChild(diagnose);
+    diagnosisElem.appendChild(row1);
 
-  //var row2 = document.createElement("div");
-  //row2.classList.add("w3-row");
-  var likelihood = document.createElement("div");
-  likelihood.innerHTML = Math.round(trucks[0].diagnosis.likelihood * 100).toString() + " %";
-  likelihood.classList.add("tooltip");
-  likelihood.classList.add("info-item");
-  likelihood.style.marginLeft = "20px";
-  var likelihoodtt = document.createElement("span");
-  likelihoodtt.innerHTML = "likelihood";
-  likelihoodtt.classList.add("tooltiptext");
-  likelihood.appendChild(likelihoodtt);
-  row1.appendChild(likelihood);
-  //diagnosisElem.appendChild(row2);
+    var likelihood = document.createElement("div");
+    likelihood.innerHTML = Math.round(trucks[0].diagnoses[i].likelihood * 100).toString() + " %";
+    likelihood.classList.add("tooltip");
+    likelihood.classList.add("info-item");
+    likelihood.style.marginLeft = "20px";
+    var likelihoodtt = document.createElement("span");
+    likelihoodtt.innerHTML = "likelihood";
+    likelihoodtt.classList.add("tooltiptext");
+    likelihood.appendChild(likelihoodtt);
+    row1.appendChild(likelihood);
 
-  if (trucks[0].diagnosis.prognoses.length > 0) {
-    for (i = 0; i < trucks[0].diagnosis.prognoses.length; i++){
-      var row3 = document.createElement("div");
-      row3.classList.add("w3-row");
-      var prognosis = document.createElement("div");
-      prognosis.innerHTML = trucks[0].diagnosis.prognoses[i].prognosis;
-      prognosis.classList.add("tooltip");
-      prognosis.classList.add("info-item");
-      var prognosistt = document.createElement("span");
-      prognosistt.innerHTML = "Prognosis";
-      prognosistt.classList.add("tooltiptext");
-      prognosis.appendChild(prognosistt);
+    if (trucks[vid].diagnoses[0].prognoses.length > 0) {
+      for (j = 0; j < trucks[vid].diagnoses[0].prognoses.length; j++){
+        var row3 = document.createElement("div");
+        row3.classList.add("w3-row");
+        var prognosis = document.createElement("div");
+        prognosis.innerHTML = trucks[vid].diagnoses[0].prognoses[j].prognosis;
+        prognosis.classList.add("tooltip");
+        prognosis.classList.add("info-item");
+        var prognosistt = document.createElement("span");
+        prognosistt.innerHTML = "Prognosis";
+        prognosistt.classList.add("tooltiptext");
+        prognosis.appendChild(prognosistt);
 
-      var avgLife = document.createElement("div");
-      avgLife.innerHTML = trucks[0].diagnosis.prognoses[i].AvgLife + " units";
-      avgLife.classList.add("tooltip");
-      avgLife.classList.add("info-item");
-      avgLife.style.marginLeft = "20px";
-      var avgLifett = document.createElement("span");
-      avgLifett.innerHTML = "Avg. life";
-      avgLifett.classList.add("tooltiptext");
-      avgLife.appendChild(avgLifett);
+        var avgLife = document.createElement("div");
+        avgLife.innerHTML = trucks[0].diagnoses[0].prognoses[j].AvgLife + " u";
+        avgLife.classList.add("tooltip");
+        avgLife.classList.add("info-item");
+        avgLife.style.marginLeft = "20px";
+        var avgLifett = document.createElement("span");
+        avgLifett.innerHTML = "Avg. life";
+        avgLifett.classList.add("tooltiptext");
+        avgLife.appendChild(avgLifett);
 
-      row3.appendChild(prognosis);
-      row3.appendChild(avgLife);
-      diagnosisElem.appendChild(row3);
+        row3.appendChild(prognosis);
+        row3.appendChild(avgLife);
+        diagnosisElem.appendChild(row3);
+      }
     }
   }
 }
@@ -1030,7 +1144,7 @@ function loadTests(vid, eid){
   }
 }
 
-function loadPopup(id){
+function loadPopup(id, mapname){
   if (truckpopup != undefined){
     var wheelsAlerts = getWheelAlerts(id);
     var oilPressAlert = getOilPressAlert(id);
@@ -1074,10 +1188,13 @@ function loadPopup(id){
       htmlcode += '<span class="popupalert"> ' + brakeEngAlert + ' </span>' + '<br>';
     }
     htmlcode +=  '</div>' +
-    '</div>' +
-    '<div class="my-row" style="width:300px">' +
-      '<button class="moreBtn" onclick="openVehicle(' + id + ')">More</button>' +
     '</div>';
+
+    if (activePage == "vehicles"){
+    htmlcode +=  '<div class="my-row" style="width:300px">' +
+        '<button class="moreBtn" onclick="openVehicle(' + id + ')">More</button>' +
+      '</div>';
+    }
     truckpopup.setHTML(htmlcode);
   }
 }

@@ -20,18 +20,10 @@
   <!-- Navbar -->
   <nav class="w3-sidebar w3-bar-block w3-collapse w3-top sidebar" style="z-index:3;width:240px" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
-      <h3 class="w3-wide header2" style="color: #DDE2FF"><img src="images/ScaniaLogo.png" class="scanialogo"/><b>CT Dashboard</b></h3>
+      <h3 class="w3-wide header2" style="color: #DDE2FF"><img src="images/ScaniaLogo.png" class="scanialogo"/><b>AV Dashboard</b></h3>
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey">
       <a onclick="showContent(1)" class="w3-bar-item w3-button"><img src="images/truckWhite.png" alt="whiteTruck" class="navicon-truck"/>Vehicles</a>
-      <!--
-      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-        Test <i class="fa fa-caret-down"></i>
-      </a>
-      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-        <a href="#" class="w3-bar-item w3-button">test1</a>
-        <a href="#" class="w3-bar-item w3-button">test2</a>
-      </div>-->
       <a onclick="showContent(2)" class="w3-bar-item w3-button"><img src="images/Contacts.png" class="navicon"/>Contacts</a>
       <a onclick="showContent(3)" class="w3-bar-item w3-button"><img src="images/KB.png" class="navicon"/>Knowledge Base</a>
       <a onclick="showContent(4)" class="w3-bar-item w3-button"><img src="images/stats.png" class="navicon"/>Analytics</a>
@@ -56,8 +48,14 @@
 
     <!-- The Specific Vehicle Section -->
     <div id="vehicleDetails" class="w3-container w3-center l12 mySection" style="width:100% !important; padding:0px; display:none">
-      <img src="images/VDheader.png" style="width:100%;margin-bottom:25px"/>
-      <a class="component-btn" href="3dmap.html" target="_blank" style="width:10%">3D-Map</a>
+      <img src="images/vDetailsUpHeader.png" style="width:100%"/>
+      <div class="w3-row">
+        <img src="images/vDetailsNavHeader.png" style="width:80%;float:left;margin-bottom:25px"/>
+        <a class="component-btn threedbtn" href="3dmap.html" target="_blank">
+          3D-Map
+          <img src="images/truck1.png" class="threedbtnimg"/>
+        </a>
+      </div>
       <div class="dashcomp">
         <div class="w3-row">
           <div class="w3-col s12 m6 l4" style="padding:2px">
@@ -297,46 +295,23 @@
       </div>
     </div>
 
-    <!-- Second Modal -->
-    <div id="secondModal" class="w3-modal w3-left-align">
+    <!-- Info Modal -->
+    <div id="infoModal" class="w3-modal w3-left-align">
       <div class="w3-modal-content w3-animate-top w3-card-4">
-        <header class="w3-container palette-1-dark w3-center w3-padding-32">
-          <span onclick="document.getElementById('secondModal').style.display='none'"
-            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
-          <h2 class="w3-wide">Second Modal</h2>
-          <p class="w3-center"><i>Something</i></p>
+        <header class="w3-container w3-center w3-padding-32">
+          <span onclick="document.getElementById('infoModal').style.display='none'"
+            class="w3-button p1 w3-xlarge w3-display-topright">×</span>
         </header>
-        <div class="w3-container palette-2-dark side-padding-32">
-          <p>Hej!</p>
-        </div>
-        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="fsecond"></button>
-        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bsecond"></button>
+        <div id="mapspecific" class="w3-container map"></div>
       </div>
     </div>
 
-    <!-- Third Modal -->
-    <div id="thirdModal" class="w3-modal w3-left-align">
-      <div class="w3-modal-content w3-animate-top w3-card-4">
-        <header class="w3-container palette-1-dark w3-center w3-padding-32">
-          <span onclick="document.getElementById('thirdModal').style.display='none'"
-            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
-          <h2 class="w3-wide">Third modal</h2>
-          <p class="w3-center"><i>Something</i></p>
-        </header>
-        <div class="w3-container palette-2-dark side-padding-32">
-          <p>Hejhej!</p>
-        </div>
-        <button class="nextbtn fa fa-4x fa-angle-right w3-display-right" id="fthird"></button>
-        <button class="nextbtn fa fa-4x fa-angle-left w3-display-left" id="bthird"></button>
-      </div>
-    </div>
-
-    <!-- Fourth Modal -->
+    <!-- Tests Modal -->
     <div id="testsModal" class="w3-modal w3-left-align">
       <div class="w3-modal-content w3-animate-top w3-card-4">
         <header class="w3-container w3-center w3-padding-16">
           <span onclick="document.getElementById('testsModal').style.display='none'"
-            class="w3-button palette-3 p1 w3-xlarge w3-display-topright">×</span>
+            class="w3-button p1 w3-xlarge w3-display-topright">×</span>
         </header>
         <div class="w3-container side-padding-16">
           <div class="my-col-short">
