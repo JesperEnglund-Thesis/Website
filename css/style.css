@@ -73,7 +73,7 @@
 }
 
 #map {
-  height: 65vh;
+  height: 70vh;
   width: 80vw;
 }
 
@@ -307,6 +307,7 @@
 
 .vhcl-agg {
   margin: 24px;
+  margin-top: 0px;
 }
 
 .comp-header {
