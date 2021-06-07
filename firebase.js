@@ -41,6 +41,9 @@ function getCurrLegCoords(place){
   else if (place == "Skavsta workshop"){
     return [16.92770, 58.78340];
   }
+  else if (place == "inbetween"){
+    return [16.42250, 58.73597];
+  }
   else {
     return [17.0, 59.0];
   }
@@ -80,9 +83,11 @@ async function setVehicle1CurrentData(fbData){
   });
   updateVehicleMap(0, "map");
   updateVehicleMap(0, "mapspecific");
+  /*
   if (activePage == 'vehicleDetails'){
     showPopup(0, "mapspecific");
   }
+  */
   getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "map");
   getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30', "map");
   getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "mapspecific");

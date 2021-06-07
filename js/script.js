@@ -512,6 +512,7 @@ function getTruckCol(vCountCallback){
       alertedCount = 0;
       onholdCount = 0;
       for (i=0; i<trucks.length;i++){
+        onholdCount += 1;
         if (trucks[i].gsh <= 50 && trucks[i].gsh > 20){
           alertedCount += 1;
           if (mapalerted == true){
@@ -582,10 +583,10 @@ alertedVhcls.addEventListener('click', function(){
 
 var onholdVhcls = document.getElementById("vehicles-onhold");
 onholdVhcls.addEventListener('click', function(){
-  mapup = false;
-  mapdown = false;
-  mapalerted = false;
-  maponhold = false;
+  mapup = true;
+  mapdown = true;
+  mapalerted = true;
+  maponhold = true;
   getTruckCol(setVehicleCounts);
 });
 
@@ -648,7 +649,7 @@ function getBrakeEngAlert(vid){
 }
 
 function loadDetails(element, vid) {
-  element.querySelector("#vVal").innerHTML = Math.round(trucks[vid].speed);
+  element.querySelector("#vVal").innerHTML = Math.round(trucks[vid].speed * 100);
   var wheelAlerts = getWheelAlerts(vid);
   var heatWheelsDisp = wheelAlerts[0];
   var vibrationWheelsDisp = wheelAlerts[1];
@@ -960,7 +961,7 @@ var myActions = [
   {
     text: "Go to workshop 1, reduced speed",
     action: {
-      route: "W1",
+      route: "Skavsta workshop",
       speed: "Vred"
     },
     takeControl: true,
@@ -1170,7 +1171,7 @@ function loadPopup(id, mapname){
         Math.round((trucks[id].distanceDriven + trucks[id].distanceLeft)/1000).toString() + ' km<br>' +
         Math.round(trucks[id].distanceLeft/1000).toString() + ' km<br>' +
         Math.round(trucks[id].distanceWS/1000).toString() + ' km<br>' +
-        Math.round(trucks[id].speed).toString() + ' km/h<br>' +
+        Math.round(trucks[id].speed * 100).toString() + ' km/h<br>' +
         trucks[id].gsh.toString() + ' %<br>';
     if (wheelsAlerts[0] != ""){
       htmlcode += '<span class="popupalert"> ' + wheelsAlerts[0] + ' </span>' + '<br>';
@@ -1195,6 +1196,8 @@ function loadPopup(id, mapname){
         '<button class="moreBtn" onclick="openVehicle(' + id + ')">More</button>' +
       '</div>';
     }
+    var coordinates = trucks[id].pos;
+    truckpopup.setLngLat(coordinates)
     truckpopup.setHTML(htmlcode);
   }
 }

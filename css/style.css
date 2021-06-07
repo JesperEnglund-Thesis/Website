@@ -195,7 +195,7 @@
   margin-top: 2px;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
-  height: 112px;
+  height: 84px;
   font-weight: 800;
 }
 
@@ -436,7 +436,7 @@
 }
 
 .yellowtag {
-  background-color: #29CC97;
+  background-color: #FEC400;
   border-radius: 8px;
   padding-left: 5px;
   padding-right: 5px;
@@ -445,7 +445,7 @@
 }
 
 .redtag {
-  background-color: #29CC97;
+  background-color: #F12B2C;
   border-radius: 8px;
   padding-left: 5px;
   padding-right: 5px;

@@ -66,6 +66,7 @@ function createNobe(){
 }
 
 function changePosition(speed){
+  speed = speed*100
   if(speed > defaultProperty.maxVal){
     speed = defaultProperty.maxVal;
   }
