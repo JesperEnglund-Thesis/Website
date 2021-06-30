@@ -19,7 +19,7 @@ Mapbox, Firebase, jQuery and the CSS styling all use CDNs and no installation is
 
 The Require method is however installed through the CLI with the aid of Browserify `https://browserify.org/`.
 - Install the uniq module with npm `npm install uniq`
-- Bundle up required modules from main.js to bundle.js with the borwserify command `browserify mapBoxMain.js -o bundle.js`
+- Bundle up required modules from main.js to bundle.js with the borwserify command `browserify mapboxMain.js -o bundle.js`
 - Anytime the mapBoxMain.js file is updated, this command needs to be run.
 
 The Unity dependency does not require any installation for running but would need a Unity-installation in case of further development. This is however not advised and in fact, not possible anymore.
