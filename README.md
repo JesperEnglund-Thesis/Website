@@ -18,6 +18,7 @@ This is an interface for fault handling of driverless vehicle fleets. It include
 Mapbox, Firebase, jQuery and the CSS styling all use CDNs and no installation is required.
 
 The Require method is however installed through the CLI with the aid of Browserify `https://browserify.org/`.
+- Go to the project root folder
 - Install the uniq module with npm `npm install uniq`
 - Bundle up required modules from main.js to bundle.js with the borwserify command `browserify mapboxMain.js -o bundle.js`
 - Anytime the mapBoxMain.js file is updated, this command needs to be run.
