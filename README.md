@@ -18,15 +18,33 @@ This is an interface for fault handling of driverless vehicle fleets. It include
 Mapbox, Firebase, jQuery and the CSS styling all use CDNs and no installation is required.
 
 The Require method is however installed through the CLI with the aid of Browserify `https://browserify.org/`.
+- Go to the project root folder
 - Install the uniq module with npm `npm install uniq`
-- Bundle up required modules from main.js to bundle.js with the borwserify command `browserify mapBoxMain.js -o bundle.js`
+- Bundle up required modules from main.js to bundle.js with the borwserify command `browserify mapboxMain.js -o bundle.js`
 - Anytime the mapBoxMain.js file is updated, this command needs to be run.
 
-The 3D-map of the truck was made in unity and built for the web with WebGL in a non-readable javascript form. Any changes to this component would therefore need to be changed in the unity project and then built and added to this project. The Unity project is linked below:
+The Unity dependency does not require any installation for running but would need a Unity-installation in case of further development. This is however not advised and in fact, not possible anymore.
+The 3D-map of the truck was made in Unity and built for the web with WebGL in a non-readable javascript form. Any changes to this component would therefore need to be changed in the Unity project and then built and added to this project. The unity project was inadvertently lost locally and never published to publicly. In case this component is further developed, it ought to be rebuilt with a Javascript library such as three.js. Even if it was possible to continue with the same setup, it's too complicated for expansion and dynamic parameters. The values of the demo version of this 3D map were hardcoded.
 
+## Running the code locally
 
+Set up an auto updating server:
 
-In continuing this work forward, 
+`npm install -g browser-sync`
 
+Run with:
 
-Mapbox implementation is NOT scalable in its current state.
+`browser-sync start --server -f -w`
+
+Available at:
+
+> http://localhost:3000
+
+## Contributions
+Contributions can be made to this GitHub repository.
+
+## Citation
+link is coming
+
+## Contact
+Contact me at jesper.enbglund92@gmail.com
