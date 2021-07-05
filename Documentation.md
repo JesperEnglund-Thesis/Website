@@ -13,3 +13,106 @@ This page is the home for the rest of the website. It contains skeleton code and
 The rest of the HTML is created dynamically in javascript.
 
 ## Javascript
+The javascript has 4 main modules which are described below.
+
+### script.js
+This is the main script, containing global variables, general math, help functions and event handlers for most of the functionality of the website.
+
+### mapBoxMain.js
+This script initiates the mapbox map and is bundled to bundle.js in order to be able to use the require-method.
+
+### firebase.js
+This script handles database event. It listens for changes in the database and writes new data to the database.
+
+### speedgauge.js
+This script handles the speed gauge movement and styling. The speed gauge is the only gauge on the dashboard that is "live".
+
+### Unity
+The Unity build also has javascript but except for the loading screen, the build is unreadable.
+
+## CSS
+The styling script style.css handles styling of elements.
+
+## Firebase
+The Firebase was set up with just one vehicle and the database has a JSON structure. A simplified version of that structure is seen below.
+
+```
+vehicle = {
+  command: {
+    action: {
+      route = string,
+      speed = string
+    },
+    takeControl = bool,
+    verifyDiagnose = bool
+  },
+  diangoses:[
+    {
+      diagnose = string,
+      likelyhood = float,
+      prognoses: [
+        {
+          AvgLife = string,
+          prognosis = string
+        }
+      ]
+    }
+  ],
+  symptoms: {
+    heat-wheel-1: {
+      values: [
+        {
+          time = string,
+          value = float
+        }
+      ]
+    }
+  },
+  vehicleInfo: {
+    VehicleLogs: [
+      {
+        content = string,
+        time = string,
+        type = string
+      }
+    ],
+    comments: [
+      {
+      comment = string,
+      sender = string,
+      time = string
+      }
+    ],
+    vehicleHealth: {
+      gsh = int,
+      symptoms: {
+        symptomsobject = object
+      }
+    },
+    vehicleInfo: {
+      model = string,
+      registration = string
+    },
+    vehicleInfoCurrent: {
+      distance = int,
+      distancedriven = int,
+      localroute: [
+        start = string,
+        dest = string
+      ],
+      mission_finished = bool,
+      route: [
+        start = string,
+        dest = string
+      ],
+      speed = int,
+      totalDowntimeApprox = int
+    }
+  }
+}
+```
+
+# Further Development
+- The code only considers one vehicle. In case multiple vehicles are added, the code needs restructuring.
+- Some of the functions regarding the map are made to translate SVEA positions/rotations to real world positions/rotations. In case real world sensor data can be used to this end, code needs restructuring.
+- The 3D-map of the vehicle ought to be rebuilt in a javascript library.
