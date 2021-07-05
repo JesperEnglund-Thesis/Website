@@ -1,9 +1,3 @@
-//MAPBOX STUFF
-var map;
-var mapboxgl;
-
-var mapspecific;
-
 var trucks = [
   {
     id: 0,
@@ -105,12 +99,16 @@ var mapalerted = false;
 var maponhold = false;
 var truckColors = ['greentrucks', 'yellowtrucks', 'redtrucks'];
 
-var pages = ['vehicleDetails', 'vehicles', 'contacts', 'knowledgeBase', 'analytics', 'settings']
-var activePage = "vehicles";
-
 var distances = [];
 
 var truckpopup;
+
+var pages = ['vehicleDetails', 'vehicles', 'contacts', 'knowledgeBase', 'analytics', 'settings']
+var activePage = "vehicles";
+
+var map;
+var mapspecific;
+var mapboxgl;
 
 //Get the rotation of the vehcile based on two geographical points (current leg)
 function getRotation(destination, origin){
