@@ -110,6 +110,9 @@ var activePage = "vehicles";
 
 var distances = [];
 
+var truckpopup;
+
+//Get the rotation of the vehcile based on two geographical points (current leg)
 function getRotation(destination, origin){
   var dLon = destination[1]-origin[1];
   var dLat = destination[0]-origin[0];
@@ -117,6 +120,7 @@ function getRotation(destination, origin){
   return angle;
 }
 
+//Set current vehicle data to mapbox feature.
 function getVehicleData(vid){
   var data = {
     'type': 'FeatureCollection',
@@ -142,6 +146,7 @@ function getVehicleData(vid){
   return data;
 }
 
+//Update vehicle data on the map.
 function updateVehicleMap(vid, mapname){
   var data = getVehicleData(vid);
   if (eval(mapname).getSource('greentrucks')){
@@ -160,22 +165,17 @@ function updateVehicleMap(vid, mapname){
   }
 }
 
+//Show Vehicle details popup and route.
 function showTruckDetails(e, mapname){
+  //Get truck coordinates of the truck
   var coordinates = e.features[0].geometry.coordinates.slice();
   var id = e.features[0].properties.id;
   var distToDest = e.features[0].properties.distToDest;
   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
   }
-
-  /*
-  if (truckpopup){
-    truckpopup.remove();
-  }
-  */
   truckpopup = new mapboxgl.Popup()
   .setLngLat(coordinates)
-  //.setHTML(htmlcode)
   .setMaxWidth("800px")
   .addTo(eval(mapname));
   loadPopup(id, mapname);
@@ -188,6 +188,7 @@ function showTruckDetails(e, mapname){
   showRoute(trucks[id], mapname);
 }
 
+//Display Vehicle details popup and route.
 function showTruckDetailsSpec(vid, mapname){
   getRoute(trucks[vid].orig, trucks[vid].pos, vid, 'driven', '#3887be', "mapspecific").then(() => {
     getRoute(trucks[vid].pos, trucks[vid].dest, vid, 'remaining', '#f30', "mapspecific").then(() => {
@@ -198,23 +199,9 @@ function showTruckDetailsSpec(vid, mapname){
     });
   });
   showPopup(vid, mapname);
-  /*
-  var coordinates = trucks[vid].pos;
-  truckpopup = new mapboxgl.Popup()
-  .setLngLat(coordinates)
-  //.setHTML(htmlcode)
-  .setMaxWidth("800px")
-  .addTo(eval(mapname));
-  //loadPopup(vid);
-
-  truckpopup.on('close', function(e) {
-    for (i=0; i<trucks.length; i++){
-      hideDetails(trucks[i], mapname);
-    }
-  });
-  */
 }
 
+//Show details popup of a truck
 function showPopup(vid, mapname){
   var coordinates = trucks[vid].pos;
   if (mapname == "mapspecific"){
@@ -224,10 +211,8 @@ function showPopup(vid, mapname){
   }
   truckpopup = new mapboxgl.Popup()
   .setLngLat(coordinates)
-  //.setHTML(htmlcode)
   .setMaxWidth("800px")
   .addTo(eval(mapname));
-  //loadPopup(vid);
 
   truckpopup.on('close', function(e) {
     for (i=0; i<trucks.length; i++){
@@ -236,6 +221,7 @@ function showPopup(vid, mapname){
   });
 }
 
+//Display departure and destination points as well as route on map.
 function showRoute(truck, mapname) {
   if (eval(mapname).getSource(truck.id + 'start')){
     eval(mapname).setLayoutProperty(
@@ -261,6 +247,7 @@ function showRoute(truck, mapname) {
   }
 }
 
+//Hide departure and destination points as well as route from map.
 function hideDetails(truck, mapname){
   eval(mapname).setLayoutProperty(
     truck.id + 'driven' + 'route',
@@ -284,6 +271,7 @@ function hideDetails(truck, mapname){
   );
 }
 
+//Add mapbox features to all the workshops
 function addWSfeatures(){
   var features = [];
   for (var i = 0; i < workshops.length; i++){
@@ -304,6 +292,7 @@ function addWSfeatures(){
   return features;
 }
 
+//Make a promise with an XMLHttpRequest
 function makeRequest(method, url) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
@@ -328,6 +317,7 @@ function makeRequest(method, url) {
     });
 }
 
+//Get and set distance to workshop
 async function getWSDist(vid){
   if (trucks[vid]){
     var pos = trucks[vid].pos;
@@ -346,6 +336,7 @@ async function getWSDist(vid){
   }
 }
 
+//Get and set the route distances.
 async function getRouteDist(start, end, vid, partofroute){
   var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
   let result = await makeRequest('GET', url);
@@ -361,6 +352,7 @@ async function getRouteDist(start, end, vid, partofroute){
   return route;
 }
 
+//get and display the route of a truck
 async function getRoute(start, end, vid, partofroute, col, mapname) {
   var url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
   let result = await makeRequest('GET', url);
@@ -416,6 +408,7 @@ async function getRoute(start, end, vid, partofroute, col, mapname) {
   }
 }
 
+//Show the correct color of the truck icon
 function showTruckCol(num, mapname){
   for (i=0; i<truckColors.length;i++) {
     var vis = 'none'
@@ -430,6 +423,7 @@ function showTruckCol(num, mapname){
   }
 }
 
+//Update list of symptoms on a vehicle
 function updateSymptomsList(id){
   var tempList = [];
   var sympList = [];
@@ -447,6 +441,7 @@ function updateSymptomsList(id){
   trucks[id].symptomList = sympList;
 }
 
+//Display the symptoms modal of a specific vehicle.
 function dispSympModal(vid){
   var symplst = document.getElementById('sympList');
   if (sympListCreated != true){
@@ -475,6 +470,7 @@ function dispSympModal(vid){
   document.getElementById('firstModal').style.display='block';
 }
 
+//Display general info modal on specific vehicle. Show popup and route immediately.
 function dispInfoModal(vid){
   document.getElementById('infoModal').style.display='block';
   mapspecific.resize();
@@ -486,6 +482,7 @@ function dispInfoModal(vid){
   showRoute(trucks[vid], "mapspecific");
 }
 
+//Display all trucks (which is always one) on the map (No filtering)
 function getTruckColSpec(){
   if (mapspecific != undefined){
     if (mapspecific.getLayer("greentrucks") && mapspecific.getLayer("redtrucks") && mapspecific.getLayer("yellowtrucks")) {
@@ -504,6 +501,7 @@ function getTruckColSpec(){
   }
 }
 
+//Count the amount of trucks in each category and display the corresponding trucks
 function getTruckCol(vCountCallback){
   if (map != undefined){
     if (map.getLayer("greentrucks") && map.getLayer("redtrucks") && map.getLayer("yellowtrucks")) {
@@ -547,6 +545,7 @@ function getTruckCol(vCountCallback){
   }
 }
 
+//Set the amount of vehciles in each category
 function setVehicleCounts(){
   document.getElementById("vhcls-up-val").innerHTML = upCount;
   document.getElementById("vhcls-down-val").innerHTML = downCount;
@@ -554,6 +553,7 @@ function setVehicleCounts(){
   document.getElementById("vhcls-onhold-val").innerHTML = onholdCount;
 }
 
+//Display up vehicles on map
 var upVhcls = document.getElementById("vehicles-up");
 upVhcls.addEventListener('click', function(){
   mapup = true;
@@ -563,6 +563,7 @@ upVhcls.addEventListener('click', function(){
   getTruckCol(setVehicleCounts);
 });
 
+//Display down vehicles on map
 var downVhcls = document.getElementById("vehicles-down");
 downVhcls.addEventListener('click', function(){
   mapup = false;
@@ -572,6 +573,7 @@ downVhcls.addEventListener('click', function(){
   getTruckCol(setVehicleCounts);
 });
 
+//Display alerted vehicles on map
 var alertedVhcls = document.getElementById("vehicles-alerted");
 alertedVhcls.addEventListener('click', function(){
   mapup = false;
@@ -581,6 +583,7 @@ alertedVhcls.addEventListener('click', function(){
   getTruckCol(setVehicleCounts);
 });
 
+//Display all vehicles on map
 var onholdVhcls = document.getElementById("vehicles-onhold");
 onholdVhcls.addEventListener('click', function(){
   mapup = true;
@@ -590,6 +593,7 @@ onholdVhcls.addEventListener('click', function(){
   getTruckCol(setVehicleCounts);
 });
 
+//Get alert string if there is heat of vibration in any of the wheels.
 function getWheelAlerts(vid){
   var heatWheelsDisp = "";
   var vibrationWheelsDisp = "";
@@ -624,6 +628,7 @@ function getWheelAlerts(vid){
   return [heatWheelsDisp, vibrationWheelsDisp];
 }
 
+//Get alert string if oil pressure is low
 function getOilPressAlert(vid){
   var returnstr = "";
   if (trucks[vid].symptoms.oillevel == true){
@@ -632,6 +637,7 @@ function getOilPressAlert(vid){
   return returnstr
 }
 
+//Get alert string if air pressure is low
 function getAirPressAlert(vid){
   var returnstr = "";
   if (trucks[vid].symptoms.airpressure == true){
@@ -640,6 +646,7 @@ function getAirPressAlert(vid){
   return returnstr
 }
 
+//Get alert string if brakes are engaged
 function getBrakeEngAlert(vid){
   var returnstr = "";
   if (trucks[vid].symptoms.brakeeng == true){
@@ -648,6 +655,7 @@ function getBrakeEngAlert(vid){
   return returnstr
 }
 
+//Display symptoms on specific vehicle
 function loadDetails(element, vid) {
   element.querySelector("#vVal").innerHTML = Math.round(trucks[vid].speed * 100);
   var wheelAlerts = getWheelAlerts(vid);
@@ -661,6 +669,7 @@ function loadDetails(element, vid) {
   element.querySelector("#p-brake-engage").innerHTML = getBrakeEngAlert(vid);
 }
 
+//Display log of specific vehicle
 function loadLog(id){
   var logList = document.getElementById("vLog");
   while (logList.firstChild) {
@@ -703,6 +712,7 @@ function loadLog(id){
   }
 }
 
+//Send comment (write to dattabase), sender Jesper Englund is hardcoded
 function sendComment(comment){
   if (comment != ""){
     var time = new Date().toLocaleString();
@@ -713,6 +723,7 @@ function sendComment(comment){
   }
 }
 
+//Display comments on specific vehicle
 function loadComments(id){
   var commList = document.getElementById("comments");
   while (commList.firstChild) {
@@ -780,6 +791,8 @@ function loadComments(id){
   }
 }
 
+//Translate and display diagnose information about a specific vehicle.
+//Only the diagnoses No fault, Air leakage, Worn bearings & Engaged brakes are considered.
 function loadDiagnose(vid){
   var diagnosisElem = document.getElementById("diagnosis");
   while (diagnosisElem.firstChild) {
@@ -865,6 +878,7 @@ function loadDiagnose(vid){
   }
 }
 
+//Open specific vehicle page
 function openVehicle(vid){
   //Open Specific vehicle by clicking More-btn in popup
   var sections = document.getElementsByClassName("mySection");
@@ -888,8 +902,65 @@ function openVehicle(vid){
   loadTests(vid, 'tests');
 }
 
-var truckpopup;
+//display and load the information in truck popup (when truck icon is clicked)
+function loadPopup(id, mapname){
+  if (truckpopup != undefined){
+    var wheelsAlerts = getWheelAlerts(id);
+    var oilPressAlert = getOilPressAlert(id);
+    var airPressAlert = getAirPressAlert(id);
+    var brakeEngAlert = getBrakeEngAlert(id);
+    var htmlcode =
+    '<div class="my-row" style="width:300px">' +
+      '<div class="my-col-short" style="color: #9FA2B4; text-align:right">' +
+        'Registration<br>' +
+        'Origin<br>' +
+        'Destination<br>' +
+        'Route dist.<br>' +
+        'Dist. to dest.<br>' +
+        'Dist. to WS<br>' +
+        'Speed<br>' +
+        'GSH<br>' +
+        'Alerts<br>' +
+      '</div>' +
+      '<div class="my-col-long" style="text-align:left">' +
+        trucks[id].reg + '<br>' +
+        trucks[id].origText + '<br>' +
+        trucks[id].destText + '<br>' +
+        Math.round((trucks[id].distanceDriven + trucks[id].distanceLeft)/1000).toString() + ' km<br>' +
+        Math.round(trucks[id].distanceLeft/1000).toString() + ' km<br>' +
+        Math.round(trucks[id].distanceWS/1000).toString() + ' km<br>' +
+        Math.round(trucks[id].speed * 100).toString() + ' km/h<br>' +
+        trucks[id].gsh.toString() + ' %<br>';
+    if (wheelsAlerts[0] != ""){
+      htmlcode += '<span class="popupalert"> ' + wheelsAlerts[0] + ' </span>' + '<br>';
+    }
+    if (wheelsAlerts[1] != ""){
+      htmlcode += '<span class="popupalert"> ' + wheelsAlerts[1] + ' </span>' + '<br>';
+    }
+    if (airPressAlert != ""){
+      htmlcode += '<span class="popupalert"> ' + airPressAlert + ' </span>' + '<br>';
+    }
+    if (oilPressAlert != ""){
+      htmlcode += '<span class="popupalert"> ' + oilPressAlert + ' </span>' + '<br>';
+    }
+    if (brakeEngAlert != ""){
+      htmlcode += '<span class="popupalert"> ' + brakeEngAlert + ' </span>' + '<br>';
+    }
+    htmlcode +=  '</div>' +
+    '</div>';
 
+    if (activePage == "vehicles"){
+    htmlcode +=  '<div class="my-row" style="width:300px">' +
+        '<button class="moreBtn" onclick="openVehicle(' + id + ')">More</button>' +
+      '</div>';
+    }
+    var coordinates = trucks[id].pos;
+    truckpopup.setLngLat(coordinates)
+    truckpopup.setHTML(htmlcode);
+  }
+}
+
+//Display general information about vehicle (top left element of dashboard)
 function loadInfo(vid){
   var infoElem = document.getElementById("infoComp");
   while (infoElem.firstChild) {
@@ -930,6 +1001,7 @@ function loadInfo(vid){
   }
 }
 
+//Actions list
 var myActions = [
   {
     text: "Finish route, full speed",
@@ -996,10 +1068,7 @@ var myActions = [
   }
 ];
 
-function setActDB(myaction, takeCont, verify){
-  write_rec_action(myaction, takeCont, verify);
-}
-
+//Add actions to the actions component
 function loadActions(vid){
   var actionsElem = document.getElementById("actions");
   while (actionsElem.firstChild) {
@@ -1032,11 +1101,12 @@ function loadActions(vid){
     let myaction = myActions[i].action;
     let takeCont = myActions[i].takeControl;
     let verify =  myActions[i].verifyDiagnose;
-    listItem.addEventListener('click', () => setActDB(myaction, takeCont, verify), false);
+    listItem.addEventListener('click', () => write_rec_action(myaction, takeCont, verify), false);
     actionsElem.appendChild(listItem);
   }
 }
 
+//display tests modal when a test is clicked
 function dispTestsModal(vid, test){
   let testsModal = document.getElementById('testsModal');
   loadTests(vid, 'testLists');
@@ -1044,6 +1114,7 @@ function dispTestsModal(vid, test){
   testsModal.style.display='block';
 }
 
+//Display the image corresponding to the clicked test
 function dispTest(test){
   let img1Elem = document.getElementById("testImg1");
   while (img1Elem.firstChild) {
@@ -1073,6 +1144,7 @@ function dispTest(test){
   img2Elem.appendChild(img2);
 }
 
+//List of tests
 let myTests = [
   {id: "restart", text: "Restart enginge", time: "Just now"},
   {id: "brake", text: "Brake test", time: "Sep 14, 2020"},
@@ -1085,6 +1157,7 @@ let myTests = [
   {id: "other", text: "Test Placeholder", time:"N/A"}
 ];
 
+//Fill tests component with tests
 function loadTests(vid, eid){
   var testsElem = document.getElementById(eid);
   while (testsElem.firstChild) {
@@ -1145,75 +1218,9 @@ function loadTests(vid, eid){
   }
 }
 
-function loadPopup(id, mapname){
-  if (truckpopup != undefined){
-    var wheelsAlerts = getWheelAlerts(id);
-    var oilPressAlert = getOilPressAlert(id);
-    var airPressAlert = getAirPressAlert(id);
-    var brakeEngAlert = getBrakeEngAlert(id);
-    var htmlcode =
-    '<div class="my-row" style="width:300px">' +
-      '<div class="my-col-short" style="color: #9FA2B4; text-align:right">' +
-        'Registration<br>' +
-        'Origin<br>' +
-        'Destination<br>' +
-        'Route dist.<br>' +
-        'Dist. to dest.<br>' +
-        'Dist. to WS<br>' +
-        'Speed<br>' +
-        'GSH<br>' +
-        'Alerts<br>' +
-      '</div>' +
-      '<div class="my-col-long" style="text-align:left">' +
-        trucks[id].reg + '<br>' +
-        trucks[id].origText + '<br>' +
-        trucks[id].destText + '<br>' +
-        Math.round((trucks[id].distanceDriven + trucks[id].distanceLeft)/1000).toString() + ' km<br>' +
-        Math.round(trucks[id].distanceLeft/1000).toString() + ' km<br>' +
-        Math.round(trucks[id].distanceWS/1000).toString() + ' km<br>' +
-        Math.round(trucks[id].speed * 100).toString() + ' km/h<br>' +
-        trucks[id].gsh.toString() + ' %<br>';
-    if (wheelsAlerts[0] != ""){
-      htmlcode += '<span class="popupalert"> ' + wheelsAlerts[0] + ' </span>' + '<br>';
-    }
-    if (wheelsAlerts[1] != ""){
-      htmlcode += '<span class="popupalert"> ' + wheelsAlerts[1] + ' </span>' + '<br>';
-    }
-    if (airPressAlert != ""){
-      htmlcode += '<span class="popupalert"> ' + airPressAlert + ' </span>' + '<br>';
-    }
-    if (oilPressAlert != ""){
-      htmlcode += '<span class="popupalert"> ' + oilPressAlert + ' </span>' + '<br>';
-    }
-    if (brakeEngAlert != ""){
-      htmlcode += '<span class="popupalert"> ' + brakeEngAlert + ' </span>' + '<br>';
-    }
-    htmlcode +=  '</div>' +
-    '</div>';
-
-    if (activePage == "vehicles"){
-    htmlcode +=  '<div class="my-row" style="width:300px">' +
-        '<button class="moreBtn" onclick="openVehicle(' + id + ')">More</button>' +
-      '</div>';
-    }
-    var coordinates = trucks[id].pos;
-    truckpopup.setLngLat(coordinates)
-    truckpopup.setHTML(htmlcode);
-  }
-}
-
 //REGULAR STUFF
 
-var myIndex = 0;
-//carousel();
-
-var slideIndex = 1;
-//showDivs(slideIndex);
-
-function plusDivs(n) {
-  showDivs(slideIndex += n);
-}
-
+//Display the appropriate tab of the page
 function showContent(n){
   var sections = document.getElementsByClassName("mySection");
   for (i = 0; i < sections.length; i++) {
@@ -1225,17 +1232,6 @@ function showContent(n){
       sections[i].style.display = "none";
     }
   }
-}
-
-function showDivs(n) {
-  var i;
-  var x = document.getElementsByClassName("mySlides");
-  if (n > x.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = x.length}
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  x[slideIndex-1].style.display = "block";
 }
 
 // Used to toggle the menu on small screens when clicking on the menu button
@@ -1259,17 +1255,14 @@ window.onclick = function(event) {
   }
 }
 
+//Open sidebar and overlay effect on small screens
 function w3_open() {
   document.getElementById("mySidebar").style.display = "block";
   document.getElementById("myOverlay").style.display = "block";
 }
 
+//Close sidebar and overlay effect on small screens
 function w3_close() {
   document.getElementById("mySidebar").style.display = "none";
   document.getElementById("myOverlay").style.display = "none";
-}
-
-function toggle3dMap(){
-  let unity = document.getElementById("unityStuff");
-  unity.style.display = "block";
 }

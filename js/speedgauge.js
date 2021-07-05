@@ -6,9 +6,9 @@ var defaultProperty = {
   initDeg             : -45,         /**reading begins angle*/
   maxDeg              : 270,         /**total angle of the meter reading*/
   edgeRadius          : 150,         /**radius of the meter circle*/
-  speedNobeH          : 3,           /**speed nobe height*/
-  speedoNobeW         : 90,          /**speed nobe width*/
-  speedoNobeL         : 12,          /**speed nobe left position*/
+  speedIndicatorH          : 3,           /**speed Indicator height*/
+  speedoIndicatorW         : 90,          /**speed Indicator width*/
+  speedoIndicatorL         : 12,          /**speed Indicator left position*/
   speedPositionTxtWH  : 80,          /**speedo-meter current value cont*/
   noOfSmallDiv        : 2,           /**no of small div between main div*/
 }
@@ -19,50 +19,47 @@ noPointsOnC        = defaultProperty.maxVal,
 divDeg             = defaultProperty.maxDeg/noOfDev,
 speedBgPosY,
 speedoWH           = defaultProperty.edgeRadius*2,
-speedNobeTop       = defaultProperty.edgeRadius - defaultProperty.speedNobeH/2,
-speedNobeAngle     = defaultProperty.initDeg,
+speedIndicatorTop       = defaultProperty.edgeRadius - defaultProperty.speedIndicatorH/2,
+speedIndicatorAngle     = defaultProperty.initDeg,
 tempDiv       = '';
 
 function setCssProperty(){
   var tempStyleVar = [
     '<style>',
-      '#' + 'mySpeedNobe' + ' .envelope{',
+      '#' + 'mySpeedIndicator' + ' .envelope{',
         'width  :'+ speedoWH + 'px;',
         'height :'+ speedoWH + 'px;',
       '}',
-      '#' + 'mySpeedNobe' + ' .speedNobe{',
-        'height            :'+ defaultProperty.speedNobeH + 'px;',
-        'top               :'+ speedNobeTop + 'px;',
-        'transform         :rotate('+speedNobeAngle+'deg);',
-        '-webkit-transform :rotate('+speedNobeAngle+'deg);',
-        '-moz-transform    :rotate('+speedNobeAngle+'deg);',
-        '-o-transform      :rotate('+speedNobeAngle+'deg);',
+      '#' + 'mySpeedIndicator' + ' .speedIndicator{',
+        'height            :'+ defaultProperty.speedIndicatorH + 'px;',
+        'top               :'+ speedIndicatorTop + 'px;',
+        'transform         :rotate('+speedIndicatorAngle+'deg);',
+        '-webkit-transform :rotate('+speedIndicatorAngle+'deg);',
+        '-moz-transform    :rotate('+speedIndicatorAngle+'deg);',
+        '-o-transform      :rotate('+speedIndicatorAngle+'deg);',
       '}',
-      '#' + 'mySpeedNobe' + ' .speedNobe div{',
-        'width  :'+ defaultProperty.speedoNobeW + 'px;',
-        'left :'+ defaultProperty.speedoNobeL + 'px;',
+      '#' + 'mySpeedIndicator' + ' .speedIndicator div{',
+        'width  :'+ defaultProperty.speedoIndicatorW + 'px;',
+        'left :'+ defaultProperty.speedoIndicatorL + 'px;',
       '}',
     '</style>',
   ].join('');
-  document.getElementById("mySpeedNobe").insertAdjacentHTML('beforeend', tempStyleVar);
-  //document.getElementById("mySpeedNobe").append(tempStyleVar);
+  document.getElementById("mySpeedIndicator").insertAdjacentHTML('beforeend', tempStyleVar);
 }
 
 function createHtmlElements(){
   setCssProperty();
-  createNobe();
+  createIndicator();
 }
 
-function createNobe(){
-  //document.getElementById("mySpeedNobe").append('<div class="envelope">');
-
-  var speedNobe = [
-    '<div class="speedNobe">',
+function createIndicator(){
+  var speedIndicator = [
+    '<div class="speedIndicator">',
       '<div></div>',
     '</div>'
   ].join('');
 
-  document.getElementsByClassName("envelope")[0].insertAdjacentHTML('beforeend', speedNobe);
+  document.getElementsByClassName("envelope")[0].insertAdjacentHTML('beforeend', speedIndicator);
 }
 
 function changePosition(speed){
@@ -76,7 +73,7 @@ function changePosition(speed){
   speedInDeg = (defaultProperty.maxDeg/defaultProperty.maxVal)*speed + defaultProperty.initDeg;
 
   $(document).ready(function(){
-    $('.envelope').find(".speedNobe").css({
+    $('.envelope').find(".speedIndicator").css({
       "-webkit-transform" :'rotate('+speedInDeg+'deg)',
       "-webkit-transform" :'rotate('+speedInDeg+'deg)',
       "-moz-transform"    :'rotate('+speedInDeg+'deg)',

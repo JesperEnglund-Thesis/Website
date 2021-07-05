@@ -327,7 +327,7 @@
 .envelope {
 	position: relative;
 }
-.speedNobe{
+.speedIndicator{
 	position:absolute;
 	width:100%;
 	z-index:10;
@@ -337,7 +337,7 @@
 	-moz-transition: all 1s;
 }
 
-.speedNobe div{
+.speedIndicator div{
 	background: #ff6400;
 	position: absolute;
 	height: 100%;

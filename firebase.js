@@ -14,11 +14,7 @@ firebase.initializeApp(firebaseConfig);
 //Read db data
 var db = firebase.firestore();
 
-db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleInfoCurrent")
-    .onSnapshot(function(doc) {
-        setVehicle1CurrentData(doc.data());
-});
-
+//Translate the SVEA position to a real life position based on current leg of route.
 function getCurrLegCoords(place){
   if (place == "Stockholm"){
     return [18.03126, 59.29206];
@@ -49,6 +45,17 @@ function getCurrLegCoords(place){
   }
 }
 
+//If there were more than one vehicles, the snapshot functions would need to be
+//looped through and the setFunctions would take an id argument.
+
+//When vehicle 1's current data is updated in the database, run
+//setVehicle1CurrentData passing the new data as an argument.
+db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleInfoCurrent")
+    .onSnapshot(function(doc) {
+        setVehicle1CurrentData(doc.data());
+});
+
+//Update current vehicle data when the database is updated
 async function setVehicle1CurrentData(fbData){
   trucks[0].speed = fbData.speed;
   trucks[0].origText = fbData.route[0];
@@ -83,11 +90,6 @@ async function setVehicle1CurrentData(fbData){
   });
   updateVehicleMap(0, "map");
   updateVehicleMap(0, "mapspecific");
-  /*
-  if (activePage == 'vehicleDetails'){
-    showPopup(0, "mapspecific");
-  }
-  */
   getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "map");
   getRoute(trucks[0].pos, trucks[0].dest, 0, 'remaining', '#f30', "map");
   getRoute(trucks[0].orig, trucks[0].pos, 0, 'driven', '#3887be', "mapspecific");
@@ -95,11 +97,14 @@ async function setVehicle1CurrentData(fbData){
 
 }
 
+//When vehicle 1 health data is updated in the database, run setVehicle1HealthData
+//passing the new data as an argument.
 db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("vehicleHealth")
     .onSnapshot(function(doc) {
         setVehicle1HealthData(doc.data());
 });
 
+//Update vehicle health data when the database is updated
 function setVehicle1HealthData(fbData){
   trucks[0].gsh = fbData.gsh;
   trucks[0].symptoms.wheels.heat = fbData.symptoms.hotnave;
@@ -120,11 +125,14 @@ function setVehicle1HealthData(fbData){
   }
 }
 
+//When vehicle 1 log data is updated in the database, run setVehicle1LogData
+//passing the new data as an argument.
 db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("VehicleLogs")
     .onSnapshot(function(doc) {
       setVehicle1LogData(doc.data());
 });
 
+//Update vehicle log data when the database is updated
 function setVehicle1LogData(fbData){
   trucks[0].log = fbData.Logs;
   if (activePage == 'vehicleDetails'){
@@ -132,11 +140,14 @@ function setVehicle1LogData(fbData){
   }
 }
 
+//When vehicle 1 comments data is updated in the database, run setVehicle1CommData
+//passing the new data as an argument.
 db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("comments")
     .onSnapshot(function(doc) {
         setVehicle1CommData(doc.data());
 });
 
+//Update vehicle comments data when the database is updated
 function setVehicle1CommData(fbData){
   trucks[0].comments = fbData.comments;
   if (activePage == 'vehicleDetails'){
@@ -144,11 +155,14 @@ function setVehicle1CommData(fbData){
   }
 }
 
+//When vehicle 1 diagnosis data is updated in the database, run setVehicle1CommData
+//passing the new data as an argument.
 db.collection("VehiclesTest").doc("Vehicle1").collection("diagnosis").doc("diagnoses")
     .onSnapshot(function(doc) {
         setVehicle1DiagData(doc.data());
 });
 
+//Update vehicle diagnosis data when the database is updated
 function setVehicle1DiagData(fbData){
   for (i = 0; i < fbData.dia.length; i++){
     var diagnosecode = fbData.dia[i].diagnose;
@@ -166,6 +180,7 @@ function setVehicle1DiagData(fbData){
   }
 }
 
+//write chosen action to database.
 function write_rec_action(action, takeCont, ver){
   db.collection("VehiclesTest").doc("Vehicle1").collection("commands").doc("command").set({
     action: action,
@@ -180,6 +195,7 @@ function write_rec_action(action, takeCont, ver){
   });
 }
 
+//write comments to database.
 function write_comment(comment, sender, time){
   db.collection("VehiclesTest").doc("Vehicle1").collection("vehicleinfo").doc("comments").update({
     comments: firebase.firestore.FieldValue.arrayUnion({
