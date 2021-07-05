@@ -30,6 +30,13 @@ This script handles the speed gauge movement and styling. The speed gauge is the
 ### Unity
 The Unity build also has javascript but except for the loading screen, the build is unreadable.
 
+**Controls**
+
+- Alt + Drag: Rotate camera around vehicle
+- Scroll: Zoom in and out.
+- b: Start error alert in right wheel
+- click right wheel: display hardcoded symptoms on right wheel
+
 ## CSS
 The styling script style.css handles styling of elements.
 
@@ -113,7 +120,11 @@ vehicle = {
 ```
 
 # Environment
-The website has only been tested in Google Chrome and does not necessarily fare well in other browsers
+The website has only been tested in Google Chrome and does not necessarily fare well in other browsers.
+
+The first clickeable prototype of the interface was created in Figma. A link can be found below:
+
+https://www.figma.com/file/HlMZEbX2nJl16UWvDEW3Bu/Exjobb-Scania-Team-Library?node-id=315%3A2
 
 # Further Development
 - The code only considers one vehicle. In case multiple vehicles are added, the code needs restructuring.
