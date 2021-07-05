@@ -112,7 +112,11 @@ vehicle = {
 }
 ```
 
+# Environment
+The website has only been tested in Google Chrome and does not necessarily fare well in other browsers
+
 # Further Development
 - The code only considers one vehicle. In case multiple vehicles are added, the code needs restructuring.
 - Some of the functions regarding the map are made to translate SVEA positions/rotations to real world positions/rotations. In case real world sensor data can be used to this end, code needs restructuring.
 - The 3D-map of the vehicle ought to be rebuilt in a javascript library.
+- Responsiveness needs to be optimized
