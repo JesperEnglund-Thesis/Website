@@ -119,6 +119,30 @@ vehicle = {
 }
 ```
 
+Below are some snapshots of the database:
+
+![Commands](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbCommands.png?raw=true)
+
+Any "document" in Firebase ("command" in the above example) can be overwritten. So if one would wish to change the structure in a document, it can be done. If that is not desired, one has to be careful to maintain the same structure when updating the database.
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbDiagnoses.png?raw=true)
+
+The diagnoses document was created as a list to enable the diagnosis model to send several possible diagnoses. This was however not done in the end.
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbSymptoms.png?raw=true)
+
+The symptoms weren't used at all but mostly created as a mock-up of how the operational data from sensors could be saved.
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbvLogs.png?raw=true)
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbComments.png?raw=true)
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbvHealth.png?raw=true)
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbVInfo.png?raw=true)
+
+![Diagnosis](https://github.com/JesperEnglund-Thesis/Website/blob/main/images/docs/fbVInfoCurrent.png?raw=true)
+
 # Environment
 The website has only been tested in Google Chrome and does not necessarily fare well in other browsers.
 
